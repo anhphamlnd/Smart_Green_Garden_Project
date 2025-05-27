@@ -1,0 +1,8 @@
+VERSION:3 SOURCE_TIMESTAMP:5AB81ACC
+NODE:M LEVEL:0 LINE:2 "_UARTLIB_"
+NODE:I LEVEL:0 LINE:4 "C:\cvavr\inc\mega328p.h"
+NODE:M LEVEL:0 LINE:6 "FOSC"
+NODE:F LEVEL:0 LINE:11 "uart_init(unsigned int baudrate)"
+NODE:F LEVEL:0 LINE:32 "uart_putchar(unsigned char data)"
+NODE:F LEVEL:0 LINE:40 "uart_putstring(unsigned char * str)"
+NODE:F LEVEL:0 LINE:51 "uart_put_int(unsigned int value)"

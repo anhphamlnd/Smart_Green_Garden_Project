@@ -1,0 +1,167 @@
+z/*
+ * oled_display.c
+ *
+ * Created: 5/30/2024 4:26:37 PM
+ * Author: Dell
+ */
+#include <mega328p.h>
+#include <delay.h>
+#include <font.h>
+#include <TWI_Lib.h>
+#define SSD1306_ADDR 0x3C
+#define SSD1306_WIDTH 128
+#define SSD1306_HEIGHT 64
+#define SSD1306_BUFFER_SIZE (SSD1306_WIDTH * SSD1306_HEIGHT / 8)
+unsigned char ssd1306_buffer[SSD1306_BUFFER_SIZE];
+
+int curx,cury;
+
+void SSD1306_Command(char cmd) {
+    TWI_Start();                     // Kh?i d?u truy?n d? li?u qua I2C
+    TWI_Send_Byte(SSD1306_ADDR << 1);   // G?i d?a ch? SSD1306 v?i bit R/W = 0 (ghi)
+    TWI_Send_Byte(0x00);                // G?i byte di?u khi?n d? ch?n thanh ghi di?u khi?n
+    TWI_Send_Byte(cmd);                 // G?i l?nh
+    TWI_Stop();                     // K?t th?c truy?n d? li?u qua I2C
+}
+void ssd1306_set_cursor(unsigned int x, unsigned int y) {
+    curx = x;
+    cury = y;
+    SSD1306_Command(0xB0 + y); // Set page address
+    SSD1306_Command(x & 0x0F); // Set lower column address
+    SSD1306_Command(0x10 | (x >> 4)); // Set higher column address
+}
+
+void ssd1306_clear() {
+    int page,col;
+    for(page = 0;page<8;page++){
+        for(col =0; col<128;col++){
+            ssd1306_buffer[page*128+col]=0;
+        }
+    }
+    curx=0;
+    cury=0;
+    
+}
+
+void ssd1306_write_char(char c) {
+    int i;
+    if(curx+10<128){
+    if (c < 32 || c > 127) {
+        c = ' '; // Replace unsupported characters with space
+    }
+    for (i = 0; i < 5; i++) {
+        ssd1306_buffer[curx + (cury * SSD1306_WIDTH) + i] = font5x8[c - 32][i];
+    }
+    ssd1306_buffer[curx + (cury * SSD1306_WIDTH) + 5] = 0x00; // Space between characters
+    curx += 6; // Move to the next character position
+    }
+    else cury ++;
+}
+
+
+void ssd1306_print(const char* str) {
+     while (*str) {
+        
+        ssd1306_write_char(*str);
+        *str++;
+    }
+}
+
+void ssd1306_println(const char* str) {
+    while (*str) {
+        ssd1306_write_char(*str);
+        *str++;   
+    }
+    curx = 0; 
+    cury++;
+}
+void ssd1306_display(){
+    int page,col;
+    for (page = 0; page < 8; page++) {
+        ssd1306_set_cursor(0, page);
+        TWI_Start();
+        TWI_Send_Byte(SSD1306_ADDR << 1);   // Send SSD1306 address with write flag
+        TWI_Send_Byte(0x40);                // Send data byte to control register
+        for (col = 0; col < SSD1306_WIDTH; col++) {
+            TWI_Send_Byte(ssd1306_buffer[page * SSD1306_WIDTH + col]);
+        }
+        TWI_Stop();
+    }
+
+}
+void ssd1306_write_float(float fvalue)
+{
+    unsigned char buf[8];
+    int value;
+    int index = 0,i,j,k;
+    
+    for(k=0;k<2;k++){
+        fvalue = fvalue*10;
+        value = fvalue;
+    }
+    j = value;
+    do {
+        if(j<100 && j>9){
+            buf[index] = 46;
+            index +=1; 
+        }
+        buf[index] = j%10 + 48;//chuyen gia tri sang ki tu
+        j = j/10;
+        index +=1;    
+    } while(j);
+    
+    for (i = index; i>0; i--){
+    ssd1306_write_char(buf[i-1]);
+    }
+}
+
+void ssd1306_write_int(int value)
+{
+    unsigned char buf[8];
+    int index = 0,i,j;
+    j = value;
+    do {
+        buf[index] = j%10 + 48;//chuyen gia tri sang ki tu
+        j = j/10;
+        index +=1;    
+    } while(j);
+    
+    for (i = index; i>0; i--){
+    ssd1306_write_char(buf[i-1]);
+    }
+}
+void SSD1306_Init() {
+    TWI_Init(SSD1306_ADDR, 0, 100000);
+    // Kh?i t?o c?c thi?t b? di?u khi?n OLED
+    SSD1306_Command(0xAE); // T?t m?n h?nh
+    SSD1306_Command(0x20); // Ch? d? addressing: horizontal addressing
+    SSD1306_Command(0x00); // Kh?ng scroll
+    SSD1306_Command(0xB0); // Ch?n page start address
+    SSD1306_Command(0xC8); // COM scan direction: reversed
+    SSD1306_Command(0x00); // Th?m d?ng d?ch v? ph?i
+    SSD1306_Command(0x10); // Set higher column start address
+    SSD1306_Command(0x40); // Set display start line
+    SSD1306_Command(0x81); // Set contrast control register
+    SSD1306_Command(0xCF); // Gi? tr? contrast
+    SSD1306_Command(0xA1); // Set segment re-map 0 to 127
+    SSD1306_Command(0xA6); // Set normal display
+    SSD1306_Command(0xA8); // Set multiplex ratio(1 to 64)
+    SSD1306_Command(0x3F); // Gi? tr? multiplex ratio
+    SSD1306_Command(0xA4); // Disable Entire Display On (resume to RAM content display)
+    SSD1306_Command(0xD3); // Set display offset
+    SSD1306_Command(0x00); // Gi? tr? display offset
+    SSD1306_Command(0xD5); // Set display clock divide ratio/oscillator frequency
+    SSD1306_Command(0x80); // Gi? tr? display clock divide ratio
+    SSD1306_Command(0xD9); // Set pre-charge period
+    SSD1306_Command(0xF1); // Gi? tr? pre-charge period
+    SSD1306_Command(0xDA); // Set com pins hardware configuration
+    SSD1306_Command(0x12); // Gi? tr? com pins hardware configuration
+    SSD1306_Command(0xDB); // Set Vcomh deselect level
+    SSD1306_Command(0x40); // Gi? tr? Vcomh deselect level
+    SSD1306_Command(0x8D); // Charge pump
+    SSD1306_Command(0x14); // Enable charge pump
+    SSD1306_Command(0xAF); // B?t m?n h?nh
+    
+    ssd1306_clear();
+    ssd1306_display();
+}

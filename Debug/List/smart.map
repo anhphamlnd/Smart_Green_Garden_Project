@@ -1,0 +1,86 @@
+RAM Allocation [bytes]
+Variable                                                                          Address   Size
+------------------------------------------------------------------------------------------------
+TWI_Rx_Buf                                                                        0x03E2      50
+TWI_Tx_Buf                                                                        0x0414      50
+ssd1306_buffer                                                                    0x0446    1024
+cury                                                                              0x0846       2
+millis_counter                                                                    0x0848       4
+timer_overflow_count                                                              0x084C       1
+I_RH                                                                              0x084D       2
+D_RH                                                                              0x084F       2
+I_Temp                                                                            0x0851       2
+D_Temp                                                                            0x0853       2
+CheckSum                                                                          0x0855       2
+display_buffer                                                                    0x0857      20
+hasObstacle                                                                       0x086B       1
+past_obstacle                                                                     0x086C       1
+led_state                                                                         0x086D       1
+sound_detected                                                                    0x086E       1
+last_sound_state                                                                  0x086F       1
+clap_timer                                                                        0x0870       4
+clap_count                                                                        0x0874       1
+waiting_for_second_clap                                                           0x0875       1
+last_dht_read                                                                     0x0876       4
+last_display_update                                                               0x087A       4
+debug_seconds                                                                     0x087E       2
+debug_last_second                                                                 0x0880       4
+temp_alert_active                                                                 0x0884       1
+temp_alert_start_time                                                             0x0885       4
+temp_alert_last_toggle                                                            0x0889       4
+temp_alert_buzzer_state                                                           0x088D       1
+debug_led (smart.c)                                                               0x088E       1
+
+EEPROM Allocation [bytes]
+Variable                                                                          Address   Size
+------------------------------------------------------------------------------------------------
+
+Register Allocation
+Variable                                                                          Register  Size
+------------------------------------------------------------------------------------------------
+TWI_Rx_Index                                                                      R3,R4        2
+TWI_Tx_Index                                                                      R5,R6        2
+TWI_Data_In                                                                       R7,R8        2
+Status_Code                                                                       R10          1
+i                                                                                 R11,R12      2
+curx                                                                              R13,R14      2
+dht_error                                                                         R9           1
+
+FLASH Allocation [words]
+Function                                                                          Address   Size
+------------------------------------------------------------------------------------------------
+TWI_Init                                                                          0x00332     40
+TWI_Start                                                                         0x0035A     11
+TWI_Stop                                                                          0x00365      4
+TWI_Send_Byte                                                                     0x00369     15
+SSD1306_Command                                                                   0x00378     11
+ssd1306_set_cursor                                                                0x00383     27
+ssd1306_clear                                                                     0x0039E     34
+ssd1306_write_char                                                                0x003C0     67
+ssd1306_print                                                                     0x00403     15
+ssd1306_display                                                                   0x00412     37
+SSD1306_Init                                                                      0x00437     62
+timer0_init                                                                       0x00475     15
+timer0_compa_isr                                                                  0x00484     39
+millis                                                                            0x004AB     16
+get_uptime_seconds                                                                0x004BB      7
+format_uptime                                                                     0x004C2    181
+servo_setup                                                                       0x00577     33
+open_gate                                                                         0x00598      5
+close_gate                                                                        0x0059D      7
+dht_request                                                                       0x005A4     11
+dht_response                                                                      0x005AF      8
+dht_receive_data                                                                  0x005B7     31
+read_dht11                                                                        0x005D6     67
+check_temperature_alert                                                           0x00619     92
+set_led                                                                           0x00675     13
+handle_clap_switch                                                                0x00682     88
+update_display                                                                    0x006DA    308
+debug_timer                                                                       0x0080E     47
+system_init                                                                       0x0083D    156
+main                                                                              0x008D9     99
+put_buff_G100                                                                     0x0093C     50
+_print_G100                                                                       0x0096E    316
+sprintf                                                                           0x00AAA     54
+strlen                                                                            0x00AE0     12
+strlenf                                                                           0x00AEC     13
