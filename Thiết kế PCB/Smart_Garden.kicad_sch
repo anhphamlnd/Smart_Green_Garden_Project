@@ -4,6 +4,12 @@
 	(generator_version "8.0")
 	(uuid "5b06327d-aa89-46b2-b60e-50c5b36de2b0")
 	(paper "A4")
+	(title_block
+		(title "Smart Garden")
+		(date "2025-05-12")
+		(rev "1.1")
+		(company "Author : Vương Toàn Hội - Phạm Ngọc Ánh")
+	)
 	(lib_symbols
 		(symbol "Connector:Conn_01x03_Socket"
 			(pin_names
