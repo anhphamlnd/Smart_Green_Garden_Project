@@ -16,7 +16,7 @@
 #define SOUND_SENSOR_PIN PINC3
 
 // === GLOBAL VARIABLES ===
-// Timer & Millis - FIXED
+// Timer & Millis 
 volatile unsigned long millis_counter = 0;
 volatile unsigned char timer_overflow_count = 0;
 
@@ -28,7 +28,7 @@ unsigned char dht_error = 0;
 // Gate control variables
 unsigned char hasObstacle = 0, past_obstacle = 0;
 
-// Clap switch variables - Simplified
+// Clap switch variables 
 unsigned char led_state = 0;
 unsigned char sound_detected = 0;
 unsigned char last_sound_state = 1; // KY-037 idle = HIGH
@@ -40,17 +40,17 @@ unsigned char waiting_for_second_clap = 0;
 unsigned long last_dht_read = 0;
 unsigned long last_display_update = 0;
 
-// Debug variables - NEW
+// Debug variables 
 unsigned int debug_seconds = 0;
 unsigned long debug_last_second = 0;
 
-// Temperature alert variables - NEW
+// Temperature alert variables
 unsigned char temp_alert_active = 0;
 unsigned long temp_alert_start_time = 0;
 unsigned long temp_alert_last_toggle = 0;
 unsigned char temp_alert_buzzer_state = 0;
 
-// === TIMER & MILLIS FUNCTIONS - FIXED ===
+// === TIMER & MILLIS FUNCTIONS ===
 void timer0_init() {
     // Clear timer registers
     TCCR0A = 0x00;
@@ -72,7 +72,7 @@ void timer0_init() {
     #asm("sei");
 }
 
-// Fixed interrupt handler
+// Interrupt handler
 interrupt [TIM0_COMPA] void timer0_compa_isr(void) {
     millis_counter++;
     timer_overflow_count++;
@@ -91,7 +91,7 @@ unsigned long millis() {
     return temp;
 }
 
-// New function to get seconds with proper handling
+// Function to get seconds with proper handling
 unsigned int get_uptime_seconds() {
     unsigned long current_millis = millis();
     return (unsigned int)(current_millis / 1000UL);
@@ -132,11 +132,11 @@ void format_uptime(char* buffer, unsigned long total_seconds) {
     }
 }
 
-// === SERVO CONTROL FUNCTIONS - FIXED ===
+// === SERVO CONTROL FUNCTIONS ===
 void servo_setup() {
     DDRB |= (1 << 1); // PB1 output (SERVO_PIN)
     
-    // Timer1 setup for 16MHz - exactly like your working code
+    // Timer1 setup
     TCCR1A = 0x00;
     TCCR1B = 0x00;
     TCCR1A |= (1 << WGM11);
@@ -154,13 +154,11 @@ void servo_setup() {
 }
 
 void open_gate() {
-    // Your working "open" values (90 degrees)
     OCR1AH = 0b00001011;  // 0x0B
     OCR1AL = 0b01111100;  // 0x7C
 }
 
 void close_gate() {
-    // Your working "close" values (0 degrees)
     OCR1AH = 0b00000100;  // 0x04
     OCR1AL = 0b00100100;  // 0x24
 }
@@ -216,7 +214,7 @@ unsigned char read_dht11() {
     }
 }
 
-// === TEMPERATURE ALERT FUNCTIONS - NEW ===
+// === TEMPERATURE ALERT FUNCTIONS ===
 void check_temperature_alert() {
     unsigned long current_time = millis();
     
@@ -310,7 +308,7 @@ void handle_clap_switch() {
     last_sound_state = current_sound;
 }
 
-// === DISPLAY FUNCTIONS - ENHANCED ===
+// === DISPLAY FUNCTIONS ===
 void update_display() {
     // Declare all variables at the beginning
     unsigned long current_millis;
@@ -429,7 +427,7 @@ void debug_timer() {
     }
 }
 
-// === SYSTEM INITIALIZATION - ENHANCED ===
+// === SYSTEM INITIALIZATION ===
 void system_init() {
     int i;
     
@@ -516,7 +514,7 @@ void system_init() {
     delay_ms(1000);
 }
 
-// === MAIN FUNCTION - ENHANCED ===
+// === MAIN FUNCTION ===
 void main(void) {
     unsigned long current_time;
     
