@@ -1233,113 +1233,113 @@ _0x31:
 ;PCODE: $00000460 VOL: 1
 ; 0000 004F 
 ; 0000 0050 // Reset overflow counter every second for debug
-; 0000 0051 if (timer_overflow_count >= 250) {  // 250 * 4ms = 1000ms
+; 0000 0051 if (timer_overflow_count >= 1000) {  // 250 * 4ms = 1000ms
 ;PCODE: $00000461 VOL: 1
 ;PCODE: $00000462 VOL: 0
 ;PCODE: $00000463 VOL: 0
-; 0000 0052 timer_overflow_count = 0;
 ;PCODE: $00000464 VOL: 0
-;PCODE: $00000465 VOL: 1
+; 0000 0052 timer_overflow_count = 0;
+;PCODE: $00000465 VOL: 0
+;PCODE: $00000466 VOL: 1
 ; 0000 0053 }
 ; 0000 0054 }
-;PCODE: $00000466 VOL: 0
 ;PCODE: $00000467 VOL: 0
 ;PCODE: $00000468 VOL: 0
 ;PCODE: $00000469 VOL: 0
+;PCODE: $0000046A VOL: 0
 ;unsigned long millis() {
 ; 0000 0056 unsigned long millis() {
-;PCODE: $0000046A VOL: 0
 ;PCODE: $0000046B VOL: 0
+;PCODE: $0000046C VOL: 0
 ; 0000 0057 unsigned long temp;
 ; 0000 0058 #asm("cli");
-;PCODE: $0000046C VOL: 0
-;	temp -> Y+0
 ;PCODE: $0000046D VOL: 0
+;	temp -> Y+0
+;PCODE: $0000046E VOL: 0
 ; 0000 0059 temp = millis_counter;
-;PCODE: $0000046E VOL: 1
-;PCODE: $0000046F VOL: 0
-; 0000 005A #asm("sei");
+;PCODE: $0000046F VOL: 1
 ;PCODE: $00000470 VOL: 0
-; 0000 005B return temp;
+; 0000 005A #asm("sei");
 ;PCODE: $00000471 VOL: 0
+; 0000 005B return temp;
 ;PCODE: $00000472 VOL: 0
 ;PCODE: $00000473 VOL: 0
-; 0000 005C }
 ;PCODE: $00000474 VOL: 0
+; 0000 005C }
+;PCODE: $00000475 VOL: 0
 ;unsigned int get_uptime_seconds() {
 ; 0000 005F unsigned int get_uptime_seconds() {
-;PCODE: $00000475 VOL: 0
 ;PCODE: $00000476 VOL: 0
+;PCODE: $00000477 VOL: 0
 ; 0000 0060 unsigned long current_millis = millis();
 ; 0000 0061 return (unsigned int)(current_millis / 1000UL);
-;PCODE: $00000477 VOL: 0
-;	current_millis -> Y+0
 ;PCODE: $00000478 VOL: 0
+;	current_millis -> Y+0
 ;PCODE: $00000479 VOL: 0
 ;PCODE: $0000047A VOL: 0
 ;PCODE: $0000047B VOL: 0
 ;PCODE: $0000047C VOL: 0
 ;PCODE: $0000047D VOL: 0
 ;PCODE: $0000047E VOL: 0
-; 0000 0062 }
 ;PCODE: $0000047F VOL: 0
+; 0000 0062 }
+;PCODE: $00000480 VOL: 0
 ;void format_uptime(char* buffer, unsigned long total_seconds) {
 ; 0000 0065 void format_uptime(char* buffer, unsigned long total_seconds) {
-;PCODE: $00000480 VOL: 0
 ;PCODE: $00000481 VOL: 0
+;PCODE: $00000482 VOL: 0
 ; 0000 0066 unsigned int days, hours, minutes, seconds;
 ; 0000 0067 
 ; 0000 0068 days = total_seconds / 86400UL;     // 86400 seconds in a day
-;PCODE: $00000482 VOL: 0
 ;PCODE: $00000483 VOL: 0
 ;PCODE: $00000484 VOL: 0
+;PCODE: $00000485 VOL: 0
 ;	*buffer -> Y+12
 ;	total_seconds -> Y+8
 ;	days -> R16,R17
 ;	hours -> R18,R19
 ;	minutes -> R20,R21
 ;	seconds -> Y+6
-;PCODE: $00000485 VOL: 0
 ;PCODE: $00000486 VOL: 0
 ;PCODE: $00000487 VOL: 0
 ;PCODE: $00000488 VOL: 0
-; 0000 0069 total_seconds %= 86400UL;
 ;PCODE: $00000489 VOL: 0
+; 0000 0069 total_seconds %= 86400UL;
 ;PCODE: $0000048A VOL: 0
 ;PCODE: $0000048B VOL: 0
 ;PCODE: $0000048C VOL: 0
+;PCODE: $0000048D VOL: 0
 ; 0000 006A 
 ; 0000 006B hours = total_seconds / 3600UL;     // 3600 seconds in an hour
-;PCODE: $0000048D VOL: 0
 ;PCODE: $0000048E VOL: 0
 ;PCODE: $0000048F VOL: 0
 ;PCODE: $00000490 VOL: 0
-; 0000 006C total_seconds %= 3600UL;
 ;PCODE: $00000491 VOL: 0
+; 0000 006C total_seconds %= 3600UL;
 ;PCODE: $00000492 VOL: 0
 ;PCODE: $00000493 VOL: 0
 ;PCODE: $00000494 VOL: 0
+;PCODE: $00000495 VOL: 0
 ; 0000 006D 
 ; 0000 006E minutes = total_seconds / 60UL;     // 60 seconds in a minute
-;PCODE: $00000495 VOL: 0
 ;PCODE: $00000496 VOL: 0
 ;PCODE: $00000497 VOL: 0
 ;PCODE: $00000498 VOL: 0
-; 0000 006F seconds = total_seconds % 60UL;
 ;PCODE: $00000499 VOL: 0
+; 0000 006F seconds = total_seconds % 60UL;
 ;PCODE: $0000049A VOL: 0
 ;PCODE: $0000049B VOL: 0
 ;PCODE: $0000049C VOL: 0
+;PCODE: $0000049D VOL: 0
 ; 0000 0070 
 ; 0000 0071 // Format based on time duration
 ; 0000 0072 if (days > 0) {
-;PCODE: $0000049D VOL: 0
 ;PCODE: $0000049E VOL: 0
-; 0000 0073 if (hours > 0) {
 ;PCODE: $0000049F VOL: 0
+; 0000 0073 if (hours > 0) {
 ;PCODE: $000004A0 VOL: 0
-; 0000 0074 sprintf(buffer, "%ud%uh%um%us", days, hours, minutes, seconds);
 ;PCODE: $000004A1 VOL: 0
+; 0000 0074 sprintf(buffer, "%ud%uh%um%us", days, hours, minutes, seconds);
 ;PCODE: $000004A2 VOL: 0
 ;PCODE: $000004A3 VOL: 0
 ;PCODE: $000004A4 VOL: 0
@@ -1360,13 +1360,13 @@ _0x31:
 ;PCODE: $000004B3 VOL: 0
 ;PCODE: $000004B4 VOL: 0
 ;PCODE: $000004B5 VOL: 0
-; 0000 0075 } else if (minutes > 0) {
 ;PCODE: $000004B6 VOL: 0
+; 0000 0075 } else if (minutes > 0) {
 ;PCODE: $000004B7 VOL: 0
 ;PCODE: $000004B8 VOL: 0
 ;PCODE: $000004B9 VOL: 0
-; 0000 0076 sprintf(buffer, "%ud%um%us", days, minutes, seconds);
 ;PCODE: $000004BA VOL: 0
+; 0000 0076 sprintf(buffer, "%ud%um%us", days, minutes, seconds);
 ;PCODE: $000004BB VOL: 0
 ;PCODE: $000004BC VOL: 0
 ;PCODE: $000004BD VOL: 0
@@ -1384,11 +1384,11 @@ _0x31:
 ;PCODE: $000004C9 VOL: 0
 ;PCODE: $000004CA VOL: 0
 ;PCODE: $000004CB VOL: 0
-; 0000 0077 } else {
 ;PCODE: $000004CC VOL: 0
+; 0000 0077 } else {
 ;PCODE: $000004CD VOL: 0
-; 0000 0078 sprintf(buffer, "%ud%us", days, seconds);
 ;PCODE: $000004CE VOL: 0
+; 0000 0078 sprintf(buffer, "%ud%us", days, seconds);
 ;PCODE: $000004CF VOL: 0
 ;PCODE: $000004D0 VOL: 0
 ;PCODE: $000004D1 VOL: 0
@@ -1403,19 +1403,19 @@ _0x31:
 ;PCODE: $000004DA VOL: 0
 ;PCODE: $000004DB VOL: 0
 ;PCODE: $000004DC VOL: 0
-; 0000 0079 }
 ;PCODE: $000004DD VOL: 0
+; 0000 0079 }
 ;PCODE: $000004DE VOL: 0
-; 0000 007A } else if (hours > 0) {
 ;PCODE: $000004DF VOL: 0
+; 0000 007A } else if (hours > 0) {
 ;PCODE: $000004E0 VOL: 0
 ;PCODE: $000004E1 VOL: 0
 ;PCODE: $000004E2 VOL: 0
-; 0000 007B if (minutes > 0) {
 ;PCODE: $000004E3 VOL: 0
+; 0000 007B if (minutes > 0) {
 ;PCODE: $000004E4 VOL: 0
-; 0000 007C sprintf(buffer, "%uh%um%us", hours, minutes, seconds);
 ;PCODE: $000004E5 VOL: 0
+; 0000 007C sprintf(buffer, "%uh%um%us", hours, minutes, seconds);
 ;PCODE: $000004E6 VOL: 0
 ;PCODE: $000004E7 VOL: 0
 ;PCODE: $000004E8 VOL: 0
@@ -1433,11 +1433,11 @@ _0x31:
 ;PCODE: $000004F4 VOL: 0
 ;PCODE: $000004F5 VOL: 0
 ;PCODE: $000004F6 VOL: 0
-; 0000 007D } else {
 ;PCODE: $000004F7 VOL: 0
+; 0000 007D } else {
 ;PCODE: $000004F8 VOL: 0
-; 0000 007E sprintf(buffer, "%uh%us", hours, seconds);
 ;PCODE: $000004F9 VOL: 0
+; 0000 007E sprintf(buffer, "%uh%us", hours, seconds);
 ;PCODE: $000004FA VOL: 0
 ;PCODE: $000004FB VOL: 0
 ;PCODE: $000004FC VOL: 0
@@ -1452,15 +1452,15 @@ _0x31:
 ;PCODE: $00000505 VOL: 0
 ;PCODE: $00000506 VOL: 0
 ;PCODE: $00000507 VOL: 0
-; 0000 007F }
 ;PCODE: $00000508 VOL: 0
-; 0000 0080 } else if (minutes > 0) {
+; 0000 007F }
 ;PCODE: $00000509 VOL: 0
+; 0000 0080 } else if (minutes > 0) {
 ;PCODE: $0000050A VOL: 0
 ;PCODE: $0000050B VOL: 0
 ;PCODE: $0000050C VOL: 0
-; 0000 0081 sprintf(buffer, "%um%us", minutes, seconds);
 ;PCODE: $0000050D VOL: 0
+; 0000 0081 sprintf(buffer, "%um%us", minutes, seconds);
 ;PCODE: $0000050E VOL: 0
 ;PCODE: $0000050F VOL: 0
 ;PCODE: $00000510 VOL: 0
@@ -1475,11 +1475,11 @@ _0x31:
 ;PCODE: $00000519 VOL: 0
 ;PCODE: $0000051A VOL: 0
 ;PCODE: $0000051B VOL: 0
-; 0000 0082 } else {
 ;PCODE: $0000051C VOL: 0
+; 0000 0082 } else {
 ;PCODE: $0000051D VOL: 0
-; 0000 0083 sprintf(buffer, "%us", seconds);
 ;PCODE: $0000051E VOL: 0
+; 0000 0083 sprintf(buffer, "%us", seconds);
 ;PCODE: $0000051F VOL: 0
 ;PCODE: $00000520 VOL: 0
 ;PCODE: $00000521 VOL: 0
@@ -1491,157 +1491,155 @@ _0x31:
 ;PCODE: $00000527 VOL: 0
 ;PCODE: $00000528 VOL: 0
 ;PCODE: $00000529 VOL: 0
-; 0000 0084 }
 ;PCODE: $0000052A VOL: 0
+; 0000 0084 }
 ;PCODE: $0000052B VOL: 0
 ;PCODE: $0000052C VOL: 0
-; 0000 0085 }
 ;PCODE: $0000052D VOL: 0
+; 0000 0085 }
 ;PCODE: $0000052E VOL: 0
 ;PCODE: $0000052F VOL: 0
 ;PCODE: $00000530 VOL: 0
+;PCODE: $00000531 VOL: 0
 ;void servo_setup() {
 ; 0000 0088 void servo_setup() {
-;PCODE: $00000531 VOL: 0
 ;PCODE: $00000532 VOL: 0
-; 0000 0089 DDRB |= (1 << 1); // PB1 output (SERVO_PIN)
 ;PCODE: $00000533 VOL: 0
+; 0000 0089 DDRB |= (1 << 1); // PB1 output (SERVO_PIN)
 ;PCODE: $00000534 VOL: 0
-; 0000 008A 
-; 0000 008B // Timer1 setup for 16MHz - exactly like your working code
-; 0000 008C TCCR1A = 0x00;
 ;PCODE: $00000535 VOL: 0
+; 0000 008A 
+; 0000 008B // Timer1 setup
+; 0000 008C TCCR1A = 0x00;
 ;PCODE: $00000536 VOL: 0
-; 0000 008D TCCR1B = 0x00;
 ;PCODE: $00000537 VOL: 0
+; 0000 008D TCCR1B = 0x00;
 ;PCODE: $00000538 VOL: 0
-; 0000 008E TCCR1A |= (1 << WGM11);
 ;PCODE: $00000539 VOL: 0
+; 0000 008E TCCR1A |= (1 << WGM11);
 ;PCODE: $0000053A VOL: 0
 ;PCODE: $0000053B VOL: 0
-; 0000 008F TCCR1B |= (1 << WGM12) | (1 << WGM13);
 ;PCODE: $0000053C VOL: 0
+; 0000 008F TCCR1B |= (1 << WGM12) | (1 << WGM13);
 ;PCODE: $0000053D VOL: 0
 ;PCODE: $0000053E VOL: 0
-; 0000 0090 TCCR1A |= (1 << COM1A1);
 ;PCODE: $0000053F VOL: 0
+; 0000 0090 TCCR1A |= (1 << COM1A1);
 ;PCODE: $00000540 VOL: 0
 ;PCODE: $00000541 VOL: 0
-; 0000 0091 TCCR1B |= (1 << CS11); // Prescaler 8
 ;PCODE: $00000542 VOL: 0
+; 0000 0091 TCCR1B |= (1 << CS11); // Prescaler 8
 ;PCODE: $00000543 VOL: 0
 ;PCODE: $00000544 VOL: 0
+;PCODE: $00000545 VOL: 0
 ; 0000 0092 
 ; 0000 0093 // Set ICR1 = 40000 for 20ms period (exactly like your code)
 ; 0000 0094 ICR1H = 0b10011100;  // 0x9C
-;PCODE: $00000545 VOL: 0
 ;PCODE: $00000546 VOL: 0
-; 0000 0095 ICR1L = 0b01000000;  // 0x40
 ;PCODE: $00000547 VOL: 0
+; 0000 0095 ICR1L = 0b01000000;  // 0x40
 ;PCODE: $00000548 VOL: 0
+;PCODE: $00000549 VOL: 0
 ; 0000 0096 
 ; 0000 0097 // Initial position (closed) - using your exact values
 ; 0000 0098 OCR1AH = 0b00000100;  // 0x04
-;PCODE: $00000549 VOL: 0
 ;PCODE: $0000054A VOL: 0
-; 0000 0099 OCR1AL = 0b00100100;  // 0x24
 ;PCODE: $0000054B VOL: 0
+; 0000 0099 OCR1AL = 0b00100100;  // 0x24
 ;PCODE: $0000054C VOL: 0
-; 0000 009A }
 ;PCODE: $0000054D VOL: 0
+; 0000 009A }
 ;PCODE: $0000054E VOL: 0
+;PCODE: $0000054F VOL: 0
 ;void open_gate() {
 ; 0000 009C void open_gate() {
-;PCODE: $0000054F VOL: 0
 ;PCODE: $00000550 VOL: 0
-; 0000 009D // Your working "open" values (90 degrees)
-; 0000 009E OCR1AH = 0b00001011;  // 0x0B
 ;PCODE: $00000551 VOL: 0
+; 0000 009D OCR1AH = 0b00001011;  // 0x0B
 ;PCODE: $00000552 VOL: 0
-; 0000 009F OCR1AL = 0b01111100;  // 0x7C
 ;PCODE: $00000553 VOL: 0
+; 0000 009E OCR1AL = 0b01111100;  // 0x7C
 ;PCODE: $00000554 VOL: 0
-; 0000 00A0 }
 ;PCODE: $00000555 VOL: 0
+; 0000 009F }
 ;PCODE: $00000556 VOL: 0
-;void close_gate() {
-; 0000 00A2 void close_gate() {
 ;PCODE: $00000557 VOL: 0
+;void close_gate() {
+; 0000 00A1 void close_gate() {
 ;PCODE: $00000558 VOL: 0
-; 0000 00A3 // Your working "close" values (0 degrees)
-; 0000 00A4 OCR1AH = 0b00000100;  // 0x04
 ;PCODE: $00000559 VOL: 0
+; 0000 00A2 OCR1AH = 0b00000100;  // 0x04
 ;PCODE: $0000055A VOL: 0
-; 0000 00A5 OCR1AL = 0b00100100;  // 0x24
 ;PCODE: $0000055B VOL: 0
+; 0000 00A3 OCR1AL = 0b00100100;  // 0x24
 ;PCODE: $0000055C VOL: 0
-; 0000 00A6 }
 ;PCODE: $0000055D VOL: 0
+; 0000 00A4 }
 ;PCODE: $0000055E VOL: 0
-;void dht_request() {
-; 0000 00A9 void dht_request() {
 ;PCODE: $0000055F VOL: 0
+;void dht_request() {
+; 0000 00A7 void dht_request() {
 ;PCODE: $00000560 VOL: 0
-; 0000 00AA DDRD |= (1 << DHT_PIN);
 ;PCODE: $00000561 VOL: 0
+; 0000 00A8 DDRD |= (1 << DHT_PIN);
 ;PCODE: $00000562 VOL: 0
-; 0000 00AB PORTD &= ~(1 << DHT_PIN);
 ;PCODE: $00000563 VOL: 0
+; 0000 00A9 PORTD &= ~(1 << DHT_PIN);
 ;PCODE: $00000564 VOL: 0
-; 0000 00AC delay_ms(20);
 ;PCODE: $00000565 VOL: 0
+; 0000 00AA delay_ms(20);
 ;PCODE: $00000566 VOL: 0
 ;PCODE: $00000567 VOL: 0
-; 0000 00AD PORTD |= (1 << DHT_PIN);
 ;PCODE: $00000568 VOL: 0
+; 0000 00AB PORTD |= (1 << DHT_PIN);
 ;PCODE: $00000569 VOL: 0
-; 0000 00AE delay_us(30);
 ;PCODE: $0000056A VOL: 0
-; 0000 00AF }
+; 0000 00AC delay_us(30);
 ;PCODE: $0000056B VOL: 0
+; 0000 00AD }
 ;PCODE: $0000056C VOL: 0
-;void dht_response() {
-; 0000 00B1 void dht_response() {
 ;PCODE: $0000056D VOL: 0
+;void dht_response() {
+; 0000 00AF void dht_response() {
 ;PCODE: $0000056E VOL: 0
-; 0000 00B2 DDRD &= ~(1 << DHT_PIN);
 ;PCODE: $0000056F VOL: 0
+; 0000 00B0 DDRD &= ~(1 << DHT_PIN);
 ;PCODE: $00000570 VOL: 0
-; 0000 00B3 while (PIND & (1 << DHT_PIN));
 ;PCODE: $00000571 VOL: 0
+; 0000 00B1 while (PIND & (1 << DHT_PIN));
 ;PCODE: $00000572 VOL: 0
 ;PCODE: $00000573 VOL: 0
 ;PCODE: $00000574 VOL: 0
 ;PCODE: $00000575 VOL: 0
 ;PCODE: $00000576 VOL: 0
-; 0000 00B4 while (!(PIND & (1 << DHT_PIN)));
 ;PCODE: $00000577 VOL: 0
+; 0000 00B2 while (!(PIND & (1 << DHT_PIN)));
 ;PCODE: $00000578 VOL: 0
 ;PCODE: $00000579 VOL: 0
 ;PCODE: $0000057A VOL: 0
 ;PCODE: $0000057B VOL: 0
 ;PCODE: $0000057C VOL: 0
-; 0000 00B5 while (PIND & (1 << DHT_PIN));
 ;PCODE: $0000057D VOL: 0
+; 0000 00B3 while (PIND & (1 << DHT_PIN));
 ;PCODE: $0000057E VOL: 0
 ;PCODE: $0000057F VOL: 0
 ;PCODE: $00000580 VOL: 0
 ;PCODE: $00000581 VOL: 0
 ;PCODE: $00000582 VOL: 0
-; 0000 00B6 }
 ;PCODE: $00000583 VOL: 0
+; 0000 00B4 }
 ;PCODE: $00000584 VOL: 0
-;uint8_t dht_receive_data() {
-; 0000 00B8 uint8_t dht_receive_data() {
 ;PCODE: $00000585 VOL: 0
+;uint8_t dht_receive_data() {
+; 0000 00B6 uint8_t dht_receive_data() {
 ;PCODE: $00000586 VOL: 0
-; 0000 00B9 uint8_t c = 0;
-; 0000 00BA int q;
-; 0000 00BB for (q = 0; q < 8; q++) {
 ;PCODE: $00000587 VOL: 0
+; 0000 00B7 uint8_t c = 0;
+; 0000 00B8 int q;
+; 0000 00B9 for (q = 0; q < 8; q++) {
+;PCODE: $00000588 VOL: 0
 ;	c -> R17
 ;	q -> R18,R19
-;PCODE: $00000588 VOL: 0
 ;PCODE: $00000589 VOL: 0
 ;PCODE: $0000058A VOL: 0
 ;PCODE: $0000058B VOL: 0
@@ -1652,83 +1650,83 @@ _0x31:
 ;PCODE: $00000590 VOL: 0
 ;PCODE: $00000591 VOL: 0
 ;PCODE: $00000592 VOL: 0
-; 0000 00BC while (!(PIND & (1 << DHT_PIN)));
 ;PCODE: $00000593 VOL: 0
+; 0000 00BA while (!(PIND & (1 << DHT_PIN)));
 ;PCODE: $00000594 VOL: 0
 ;PCODE: $00000595 VOL: 0
 ;PCODE: $00000596 VOL: 0
 ;PCODE: $00000597 VOL: 0
 ;PCODE: $00000598 VOL: 0
-; 0000 00BD delay_us(30);
 ;PCODE: $00000599 VOL: 0
-; 0000 00BE if (PIND & (1 << DHT_PIN))
+; 0000 00BB delay_us(30);
 ;PCODE: $0000059A VOL: 0
+; 0000 00BC if (PIND & (1 << DHT_PIN))
 ;PCODE: $0000059B VOL: 0
 ;PCODE: $0000059C VOL: 0
-; 0000 00BF c = (c << 1) | 1;
 ;PCODE: $0000059D VOL: 0
+; 0000 00BD c = (c << 1) | 1;
 ;PCODE: $0000059E VOL: 0
 ;PCODE: $0000059F VOL: 0
 ;PCODE: $000005A0 VOL: 0
-; 0000 00C0 else
 ;PCODE: $000005A1 VOL: 0
+; 0000 00BE else
 ;PCODE: $000005A2 VOL: 0
-; 0000 00C1 c = (c << 1);
 ;PCODE: $000005A3 VOL: 0
-; 0000 00C2 while (PIND & (1 << DHT_PIN));
+; 0000 00BF c = (c << 1);
 ;PCODE: $000005A4 VOL: 0
+; 0000 00C0 while (PIND & (1 << DHT_PIN));
 ;PCODE: $000005A5 VOL: 0
 ;PCODE: $000005A6 VOL: 0
 ;PCODE: $000005A7 VOL: 0
 ;PCODE: $000005A8 VOL: 0
 ;PCODE: $000005A9 VOL: 0
 ;PCODE: $000005AA VOL: 0
-; 0000 00C3 }
 ;PCODE: $000005AB VOL: 0
+; 0000 00C1 }
 ;PCODE: $000005AC VOL: 0
 ;PCODE: $000005AD VOL: 0
 ;PCODE: $000005AE VOL: 0
 ;PCODE: $000005AF VOL: 0
-; 0000 00C4 return c;
 ;PCODE: $000005B0 VOL: 0
+; 0000 00C2 return c;
 ;PCODE: $000005B1 VOL: 0
 ;PCODE: $000005B2 VOL: 0
 ;PCODE: $000005B3 VOL: 0
-; 0000 00C5 }
 ;PCODE: $000005B4 VOL: 0
-;unsigned char read_dht11() {
-; 0000 00C7 unsigned char read_dht11() {
+; 0000 00C3 }
 ;PCODE: $000005B5 VOL: 0
+;unsigned char read_dht11() {
+; 0000 00C5 unsigned char read_dht11() {
 ;PCODE: $000005B6 VOL: 0
-; 0000 00C8 dht_request();
 ;PCODE: $000005B7 VOL: 0
-; 0000 00C9 dht_response();
+; 0000 00C6 dht_request();
 ;PCODE: $000005B8 VOL: 0
-; 0000 00CA 
-; 0000 00CB I_RH = dht_receive_data();
+; 0000 00C7 dht_response();
 ;PCODE: $000005B9 VOL: 0
+; 0000 00C8 
+; 0000 00C9 I_RH = dht_receive_data();
 ;PCODE: $000005BA VOL: 0
 ;PCODE: $000005BB VOL: 0
-; 0000 00CC D_RH = dht_receive_data();
 ;PCODE: $000005BC VOL: 0
+; 0000 00CA D_RH = dht_receive_data();
 ;PCODE: $000005BD VOL: 0
 ;PCODE: $000005BE VOL: 0
-; 0000 00CD I_Temp = dht_receive_data();
 ;PCODE: $000005BF VOL: 0
+; 0000 00CB I_Temp = dht_receive_data();
 ;PCODE: $000005C0 VOL: 0
 ;PCODE: $000005C1 VOL: 0
-; 0000 00CE D_Temp = dht_receive_data();
 ;PCODE: $000005C2 VOL: 0
+; 0000 00CC D_Temp = dht_receive_data();
 ;PCODE: $000005C3 VOL: 0
 ;PCODE: $000005C4 VOL: 0
-; 0000 00CF CheckSum = dht_receive_data();
 ;PCODE: $000005C5 VOL: 0
+; 0000 00CD CheckSum = dht_receive_data();
 ;PCODE: $000005C6 VOL: 0
 ;PCODE: $000005C7 VOL: 0
-; 0000 00D0 
-; 0000 00D1 // Verify checksum
-; 0000 00D2 if ((I_RH + D_RH + I_Temp + D_Temp) == CheckSum) {
 ;PCODE: $000005C8 VOL: 0
+; 0000 00CE 
+; 0000 00CF // Verify checksum
+; 0000 00D0 if ((I_RH + D_RH + I_Temp + D_Temp) == CheckSum) {
 ;PCODE: $000005C9 VOL: 0
 ;PCODE: $000005CA VOL: 0
 ;PCODE: $000005CB VOL: 0
@@ -1738,35 +1736,35 @@ _0x31:
 ;PCODE: $000005CF VOL: 0
 ;PCODE: $000005D0 VOL: 0
 ;PCODE: $000005D1 VOL: 0
-; 0000 00D3 dht_error = 0;
 ;PCODE: $000005D2 VOL: 0
-; 0000 00D4 return 1; // Success
+; 0000 00D1 dht_error = 0;
 ;PCODE: $000005D3 VOL: 0
+; 0000 00D2 return 1; // Success
 ;PCODE: $000005D4 VOL: 0
-; 0000 00D5 } else {
 ;PCODE: $000005D5 VOL: 0
-; 0000 00D6 dht_error = 1;
+; 0000 00D3 } else {
 ;PCODE: $000005D6 VOL: 0
+; 0000 00D4 dht_error = 1;
 ;PCODE: $000005D7 VOL: 0
-; 0000 00D7 return 0; // Error
 ;PCODE: $000005D8 VOL: 0
+; 0000 00D5 return 0; // Error
 ;PCODE: $000005D9 VOL: 0
-; 0000 00D8 }
 ;PCODE: $000005DA VOL: 0
-; 0000 00D9 }
+; 0000 00D6 }
 ;PCODE: $000005DB VOL: 0
+; 0000 00D7 }
 ;PCODE: $000005DC VOL: 0
-;void check_temperature_alert() {
-; 0000 00DC void check_temperature_alert() {
 ;PCODE: $000005DD VOL: 0
+;void check_temperature_alert() {
+; 0000 00DA void check_temperature_alert() {
 ;PCODE: $000005DE VOL: 0
-; 0000 00DD unsigned long current_time = millis();
-; 0000 00DE 
-; 0000 00DF // Check if temperature is above 38°C and no error
-; 0000 00E0 if (!dht_error && I_Temp >= 38) {
 ;PCODE: $000005DF VOL: 0
-;	current_time -> Y+0
+; 0000 00DB unsigned long current_time = millis();
+; 0000 00DC 
+; 0000 00DD // Check if temperature is above 38°C and no error
+; 0000 00DE if (!dht_error && I_Temp >= 38) {
 ;PCODE: $000005E0 VOL: 0
+;	current_time -> Y+0
 ;PCODE: $000005E1 VOL: 0
 ;PCODE: $000005E2 VOL: 0
 ;PCODE: $000005E3 VOL: 0
@@ -1777,163 +1775,163 @@ _0x31:
 ;PCODE: $000005E8 VOL: 0
 ;PCODE: $000005E9 VOL: 0
 ;PCODE: $000005EA VOL: 0
-; 0000 00E1 if (!temp_alert_active) {
 ;PCODE: $000005EB VOL: 0
+; 0000 00DF if (!temp_alert_active) {
 ;PCODE: $000005EC VOL: 0
 ;PCODE: $000005ED VOL: 0
-; 0000 00E2 // Start temperature alert
-; 0000 00E3 temp_alert_active = 1;
 ;PCODE: $000005EE VOL: 0
+; 0000 00E0 // Start temperature alert
+; 0000 00E1 temp_alert_active = 1;
 ;PCODE: $000005EF VOL: 0
-; 0000 00E4 temp_alert_start_time = current_time;
 ;PCODE: $000005F0 VOL: 0
+; 0000 00E2 temp_alert_start_time = current_time;
 ;PCODE: $000005F1 VOL: 0
-; 0000 00E5 temp_alert_last_toggle = current_time;
 ;PCODE: $000005F2 VOL: 0
+; 0000 00E3 temp_alert_last_toggle = current_time;
 ;PCODE: $000005F3 VOL: 0
-; 0000 00E6 temp_alert_buzzer_state = 0;
 ;PCODE: $000005F4 VOL: 0
+; 0000 00E4 temp_alert_buzzer_state = 0;
 ;PCODE: $000005F5 VOL: 0
-; 0000 00E7 }
-; 0000 00E8 } else {
 ;PCODE: $000005F6 VOL: 0
+; 0000 00E5 }
+; 0000 00E6 } else {
 ;PCODE: $000005F7 VOL: 0
 ;PCODE: $000005F8 VOL: 0
-; 0000 00E9 // Temperature is normal or DHT error - stop alert
-; 0000 00EA temp_alert_active = 0;
 ;PCODE: $000005F9 VOL: 0
+; 0000 00E7 // Temperature is normal or DHT error - stop alert
+; 0000 00E8 temp_alert_active = 0;
 ;PCODE: $000005FA VOL: 0
-; 0000 00EB if (temp_alert_buzzer_state) {
 ;PCODE: $000005FB VOL: 0
+; 0000 00E9 if (temp_alert_buzzer_state) {
 ;PCODE: $000005FC VOL: 0
 ;PCODE: $000005FD VOL: 0
-; 0000 00EC PORTD &= ~(1 << BUZZER_PIN);  // Turn off buzzer
 ;PCODE: $000005FE VOL: 0
+; 0000 00EA PORTD &= ~(1 << BUZZER_PIN);  // Turn off buzzer
 ;PCODE: $000005FF VOL: 0
-; 0000 00ED temp_alert_buzzer_state = 0;
 ;PCODE: $00000600 VOL: 0
+; 0000 00EB temp_alert_buzzer_state = 0;
 ;PCODE: $00000601 VOL: 0
-; 0000 00EE }
-; 0000 00EF }
 ;PCODE: $00000602 VOL: 0
+; 0000 00EC }
+; 0000 00ED }
 ;PCODE: $00000603 VOL: 0
-; 0000 00F0 
-; 0000 00F1 // Handle temperature alert blinking
-; 0000 00F2 if (temp_alert_active) {
 ;PCODE: $00000604 VOL: 0
+; 0000 00EE 
+; 0000 00EF // Handle temperature alert blinking
+; 0000 00F0 if (temp_alert_active) {
 ;PCODE: $00000605 VOL: 0
 ;PCODE: $00000606 VOL: 0
-; 0000 00F3 // Check if 5 seconds have passed
-; 0000 00F4 if (current_time - temp_alert_start_time >= 5000) {
 ;PCODE: $00000607 VOL: 0
+; 0000 00F1 // Check if 5 seconds have passed
+; 0000 00F2 if (current_time - temp_alert_start_time >= 5000) {
 ;PCODE: $00000608 VOL: 0
 ;PCODE: $00000609 VOL: 0
 ;PCODE: $0000060A VOL: 0
 ;PCODE: $0000060B VOL: 0
-; 0000 00F5 // 5 seconds completed - stop alert
-; 0000 00F6 temp_alert_active = 0;
 ;PCODE: $0000060C VOL: 0
+; 0000 00F3 // 5 seconds completed - stop alert
+; 0000 00F4 temp_alert_active = 0;
 ;PCODE: $0000060D VOL: 0
-; 0000 00F7 if (temp_alert_buzzer_state) {
 ;PCODE: $0000060E VOL: 0
+; 0000 00F5 if (temp_alert_buzzer_state) {
 ;PCODE: $0000060F VOL: 0
 ;PCODE: $00000610 VOL: 0
-; 0000 00F8 PORTD &= ~(1 << BUZZER_PIN);
 ;PCODE: $00000611 VOL: 0
+; 0000 00F6 PORTD &= ~(1 << BUZZER_PIN);
 ;PCODE: $00000612 VOL: 0
-; 0000 00F9 temp_alert_buzzer_state = 0;
 ;PCODE: $00000613 VOL: 0
+; 0000 00F7 temp_alert_buzzer_state = 0;
 ;PCODE: $00000614 VOL: 0
-; 0000 00FA }
-; 0000 00FB } else {
 ;PCODE: $00000615 VOL: 0
+; 0000 00F8 }
+; 0000 00F9 } else {
 ;PCODE: $00000616 VOL: 0
 ;PCODE: $00000617 VOL: 0
-; 0000 00FC // Blink buzzer every 200ms (5Hz frequency)
-; 0000 00FD if (current_time - temp_alert_last_toggle >= 200) {
 ;PCODE: $00000618 VOL: 0
+; 0000 00FA // Blink buzzer every 200ms (5Hz frequency)
+; 0000 00FB if (current_time - temp_alert_last_toggle >= 200) {
 ;PCODE: $00000619 VOL: 0
 ;PCODE: $0000061A VOL: 0
 ;PCODE: $0000061B VOL: 0
 ;PCODE: $0000061C VOL: 0
-; 0000 00FE temp_alert_buzzer_state = !temp_alert_buzzer_state;
 ;PCODE: $0000061D VOL: 0
+; 0000 00FC temp_alert_buzzer_state = !temp_alert_buzzer_state;
 ;PCODE: $0000061E VOL: 0
 ;PCODE: $0000061F VOL: 0
-; 0000 00FF temp_alert_last_toggle = current_time;
 ;PCODE: $00000620 VOL: 0
+; 0000 00FD temp_alert_last_toggle = current_time;
 ;PCODE: $00000621 VOL: 0
-; 0000 0100 
-; 0000 0101 if (temp_alert_buzzer_state) {
 ;PCODE: $00000622 VOL: 0
+; 0000 00FE 
+; 0000 00FF if (temp_alert_buzzer_state) {
 ;PCODE: $00000623 VOL: 0
 ;PCODE: $00000624 VOL: 0
-; 0000 0102 PORTD |= (1 << BUZZER_PIN);   // Buzzer on
 ;PCODE: $00000625 VOL: 0
+; 0000 0100 PORTD |= (1 << BUZZER_PIN);   // Buzzer on
 ;PCODE: $00000626 VOL: 0
-; 0000 0103 } else {
 ;PCODE: $00000627 VOL: 0
+; 0000 0101 } else {
 ;PCODE: $00000628 VOL: 0
-; 0000 0104 PORTD &= ~(1 << BUZZER_PIN);  // Buzzer off
 ;PCODE: $00000629 VOL: 0
+; 0000 0102 PORTD &= ~(1 << BUZZER_PIN);  // Buzzer off
 ;PCODE: $0000062A VOL: 0
-; 0000 0105 }
 ;PCODE: $0000062B VOL: 0
+; 0000 0103 }
+;PCODE: $0000062C VOL: 0
+; 0000 0104 }
+; 0000 0105 }
+;PCODE: $0000062D VOL: 0
+;PCODE: $0000062E VOL: 0
 ; 0000 0106 }
 ; 0000 0107 }
-;PCODE: $0000062C VOL: 0
-;PCODE: $0000062D VOL: 0
-; 0000 0108 }
-; 0000 0109 }
-;PCODE: $0000062E VOL: 0
 ;PCODE: $0000062F VOL: 0
 ;PCODE: $00000630 VOL: 0
 ;PCODE: $00000631 VOL: 0
-;void set_led(unsigned char state) {
-; 0000 010C void set_led(unsigned char state) {
 ;PCODE: $00000632 VOL: 0
+;void set_led(unsigned char state) {
+; 0000 010A void set_led(unsigned char state) {
 ;PCODE: $00000633 VOL: 0
-; 0000 010D led_state = state;
 ;PCODE: $00000634 VOL: 0
+; 0000 010B led_state = state;
 ;PCODE: $00000635 VOL: 0
-;	state -> R17
 ;PCODE: $00000636 VOL: 0
+;	state -> R17
 ;PCODE: $00000637 VOL: 0
-; 0000 010E if (led_state) {
 ;PCODE: $00000638 VOL: 0
+; 0000 010C if (led_state) {
 ;PCODE: $00000639 VOL: 0
 ;PCODE: $0000063A VOL: 0
-; 0000 010F PORTD |= (1 << LED_PIN);
 ;PCODE: $0000063B VOL: 0
+; 0000 010D PORTD |= (1 << LED_PIN);
 ;PCODE: $0000063C VOL: 0
-; 0000 0110 } else {
 ;PCODE: $0000063D VOL: 0
+; 0000 010E } else {
 ;PCODE: $0000063E VOL: 0
-; 0000 0111 PORTD &= ~(1 << LED_PIN);
 ;PCODE: $0000063F VOL: 0
+; 0000 010F PORTD &= ~(1 << LED_PIN);
 ;PCODE: $00000640 VOL: 0
-; 0000 0112 }
 ;PCODE: $00000641 VOL: 0
-; 0000 0113 }
+; 0000 0110 }
 ;PCODE: $00000642 VOL: 0
+; 0000 0111 }
 ;PCODE: $00000643 VOL: 0
 ;PCODE: $00000644 VOL: 0
-;void handle_clap_switch() {
-; 0000 0115 void handle_clap_switch() {
 ;PCODE: $00000645 VOL: 0
+;void handle_clap_switch() {
+; 0000 0113 void handle_clap_switch() {
 ;PCODE: $00000646 VOL: 0
-; 0000 0116 unsigned long current_time;
-; 0000 0117 unsigned char current_sound;
-; 0000 0118 
-; 0000 0119 current_time = millis();
 ;PCODE: $00000647 VOL: 0
+; 0000 0114 unsigned long current_time;
+; 0000 0115 unsigned char current_sound;
+; 0000 0116 
+; 0000 0117 current_time = millis();
 ;PCODE: $00000648 VOL: 0
+;PCODE: $00000649 VOL: 0
 ;	current_time -> Y+1
 ;	current_sound -> R17
-;PCODE: $00000649 VOL: 0
 ;PCODE: $0000064A VOL: 0
-; 0000 011A current_sound = (PINC & (1 << SOUND_SENSOR_PIN)) ? 1 : 0;
 ;PCODE: $0000064B VOL: 0
+; 0000 0118 current_sound = (PINC & (1 << SOUND_SENSOR_PIN)) ? 1 : 0;
 ;PCODE: $0000064C VOL: 0
 ;PCODE: $0000064D VOL: 0
 ;PCODE: $0000064E VOL: 0
@@ -1943,10 +1941,10 @@ _0x31:
 ;PCODE: $00000652 VOL: 0
 ;PCODE: $00000653 VOL: 0
 ;PCODE: $00000654 VOL: 0
-; 0000 011B 
-; 0000 011C // Detect falling edge (HIGH -> LOW) = sound detected
-; 0000 011D if (last_sound_state == 1 && current_sound == 0) {
 ;PCODE: $00000655 VOL: 0
+; 0000 0119 
+; 0000 011A // Detect falling edge (HIGH -> LOW) = sound detected
+; 0000 011B if (last_sound_state == 1 && current_sound == 0) {
 ;PCODE: $00000656 VOL: 0
 ;PCODE: $00000657 VOL: 0
 ;PCODE: $00000658 VOL: 0
@@ -1955,22 +1953,22 @@ _0x31:
 ;PCODE: $0000065B VOL: 0
 ;PCODE: $0000065C VOL: 0
 ;PCODE: $0000065D VOL: 0
-; 0000 011E if (!waiting_for_second_clap) {
 ;PCODE: $0000065E VOL: 0
+; 0000 011C if (!waiting_for_second_clap) {
 ;PCODE: $0000065F VOL: 0
 ;PCODE: $00000660 VOL: 0
-; 0000 011F // First clap
-; 0000 0120 waiting_for_second_clap = 1;
 ;PCODE: $00000661 VOL: 0
+; 0000 011D // First clap
+; 0000 011E waiting_for_second_clap = 1;
 ;PCODE: $00000662 VOL: 0
-; 0000 0121 clap_timer = current_time;
 ;PCODE: $00000663 VOL: 0
+; 0000 011F clap_timer = current_time;
 ;PCODE: $00000664 VOL: 0
-; 0000 0122 clap_count = 1;
 ;PCODE: $00000665 VOL: 0
+; 0000 0120 clap_count = 1;
 ;PCODE: $00000666 VOL: 0
-; 0000 0123 } else if (current_time - clap_timer > 30 && current_time - clap_timer < 200) {
 ;PCODE: $00000667 VOL: 0
+; 0000 0121 } else if (current_time - clap_timer > 30 && current_time - clap_timer < 200) {
 ;PCODE: $00000668 VOL: 0
 ;PCODE: $00000669 VOL: 0
 ;PCODE: $0000066A VOL: 0
@@ -1983,34 +1981,34 @@ _0x31:
 ;PCODE: $00000671 VOL: 0
 ;PCODE: $00000672 VOL: 0
 ;PCODE: $00000673 VOL: 0
-; 0000 0124 // Second clap (within 30ms - 200ms) - very fast
-; 0000 0125 clap_count = 2;
 ;PCODE: $00000674 VOL: 0
+; 0000 0122 // Second clap (within 30ms - 200ms) - very fast
+; 0000 0123 clap_count = 2;
 ;PCODE: $00000675 VOL: 0
-; 0000 0126 // Toggle LED immediately
-; 0000 0127 set_led(!led_state);
 ;PCODE: $00000676 VOL: 0
+; 0000 0124 // Toggle LED immediately
+; 0000 0125 set_led(!led_state);
 ;PCODE: $00000677 VOL: 0
 ;PCODE: $00000678 VOL: 0
 ;PCODE: $00000679 VOL: 0
-; 0000 0128 // Reset state
-; 0000 0129 waiting_for_second_clap = 0;
 ;PCODE: $0000067A VOL: 0
+; 0000 0126 // Reset state
+; 0000 0127 waiting_for_second_clap = 0;
 ;PCODE: $0000067B VOL: 0
-; 0000 012A clap_count = 0;
 ;PCODE: $0000067C VOL: 0
+; 0000 0128 clap_count = 0;
 ;PCODE: $0000067D VOL: 0
-; 0000 012B clap_timer = 0;
 ;PCODE: $0000067E VOL: 0
+; 0000 0129 clap_timer = 0;
 ;PCODE: $0000067F VOL: 0
-; 0000 012C }
-; 0000 012D }
 ;PCODE: $00000680 VOL: 0
+; 0000 012A }
+; 0000 012B }
 ;PCODE: $00000681 VOL: 0
-; 0000 012E 
-; 0000 012F // Timeout - reset if no second clap within 200ms
-; 0000 0130 if (waiting_for_second_clap && (current_time - clap_timer > 200)) {
 ;PCODE: $00000682 VOL: 0
+; 0000 012C 
+; 0000 012D // Timeout - reset if no second clap within 200ms
+; 0000 012E if (waiting_for_second_clap && (current_time - clap_timer > 200)) {
 ;PCODE: $00000683 VOL: 0
 ;PCODE: $00000684 VOL: 0
 ;PCODE: $00000685 VOL: 0
@@ -2023,74 +2021,74 @@ _0x31:
 ;PCODE: $0000068C VOL: 0
 ;PCODE: $0000068D VOL: 0
 ;PCODE: $0000068E VOL: 0
-; 0000 0131 waiting_for_second_clap = 0;
 ;PCODE: $0000068F VOL: 0
+; 0000 012F waiting_for_second_clap = 0;
 ;PCODE: $00000690 VOL: 0
-; 0000 0132 clap_count = 0;
 ;PCODE: $00000691 VOL: 0
+; 0000 0130 clap_count = 0;
 ;PCODE: $00000692 VOL: 0
-; 0000 0133 clap_timer = 0;
 ;PCODE: $00000693 VOL: 0
+; 0000 0131 clap_timer = 0;
 ;PCODE: $00000694 VOL: 0
-; 0000 0134 }
-; 0000 0135 
-; 0000 0136 last_sound_state = current_sound;
 ;PCODE: $00000695 VOL: 0
+; 0000 0132 }
+; 0000 0133 
+; 0000 0134 last_sound_state = current_sound;
 ;PCODE: $00000696 VOL: 0
 ;PCODE: $00000697 VOL: 0
-; 0000 0137 }
 ;PCODE: $00000698 VOL: 0
+; 0000 0135 }
 ;PCODE: $00000699 VOL: 0
 ;PCODE: $0000069A VOL: 0
 ;PCODE: $0000069B VOL: 0
 ;PCODE: $0000069C VOL: 0
-;void update_display() {
-; 0000 013A void update_display() {
 ;PCODE: $0000069D VOL: 0
+;void update_display() {
+; 0000 0138 void update_display() {
 ;PCODE: $0000069E VOL: 0
-; 0000 013B // Declare all variables at the beginning
-; 0000 013C unsigned long current_millis;
-; 0000 013D unsigned long uptime_seconds_long;
-; 0000 013E unsigned int uptime_seconds;
-; 0000 013F unsigned int deciseconds;
-; 0000 0140 unsigned int raw_counter;
-; 0000 0141 char uptime_formatted[16];
-; 0000 0142 
-; 0000 0143 ssd1306_clear();
 ;PCODE: $0000069F VOL: 0
+; 0000 0139 // Declare all variables at the beginning
+; 0000 013A unsigned long current_millis;
+; 0000 013B unsigned long uptime_seconds_long;
+; 0000 013C unsigned int uptime_seconds;
+; 0000 013D unsigned int deciseconds;
+; 0000 013E unsigned int raw_counter;
+; 0000 013F char uptime_formatted[16];
+; 0000 0140 
+; 0000 0141 ssd1306_clear();
 ;PCODE: $000006A0 VOL: 0
+;PCODE: $000006A1 VOL: 0
 ;	current_millis -> Y+26
 ;	uptime_seconds_long -> Y+22
 ;	uptime_seconds -> R16,R17
 ;	deciseconds -> R18,R19
 ;	raw_counter -> R20,R21
 ;	uptime_formatted -> Y+6
-;PCODE: $000006A1 VOL: 0
-; 0000 0144 
-; 0000 0145 // Title
-; 0000 0146 ssd1306_set_cursor(0, 0);
 ;PCODE: $000006A2 VOL: 0
+; 0000 0142 
+; 0000 0143 // Title
+; 0000 0144 ssd1306_set_cursor(0, 0);
 ;PCODE: $000006A3 VOL: 0
 ;PCODE: $000006A4 VOL: 0
 ;PCODE: $000006A5 VOL: 0
 ;PCODE: $000006A6 VOL: 0
-; 0000 0147 ssd1306_print("Smart Garden v2.1");
 ;PCODE: $000006A7 VOL: 0
+; 0000 0145 ssd1306_print("Smart Garden v2.1");
 ;PCODE: $000006A8 VOL: 0
 ;PCODE: $000006A9 VOL: 0
-; 0000 0148 
-; 0000 0149 // DHT11 data with temperature alert indicator
-; 0000 014A if (!dht_error) {
 ;PCODE: $000006AA VOL: 0
+; 0000 0146 
+; 0000 0147 // DHT11 data with temperature alert indicator
+; 0000 0148 if (!dht_error) {
 ;PCODE: $000006AB VOL: 0
-; 0000 014B ssd1306_set_cursor(0, 2);
 ;PCODE: $000006AC VOL: 0
+; 0000 0149 ssd1306_set_cursor(0, 2);
 ;PCODE: $000006AD VOL: 0
 ;PCODE: $000006AE VOL: 0
 ;PCODE: $000006AF VOL: 0
 ;PCODE: $000006B0 VOL: 0
-; 0000 014C if (temp_alert_active && I_Temp >= 38) {
 ;PCODE: $000006B1 VOL: 0
+; 0000 014A if (temp_alert_active && I_Temp >= 38) {
 ;PCODE: $000006B2 VOL: 0
 ;PCODE: $000006B3 VOL: 0
 ;PCODE: $000006B4 VOL: 0
@@ -2100,8 +2098,8 @@ _0x31:
 ;PCODE: $000006B8 VOL: 0
 ;PCODE: $000006B9 VOL: 0
 ;PCODE: $000006BA VOL: 0
-; 0000 014D sprintf(display_buffer, "Temp : %d.%d C !HOT!", I_Temp, D_Temp);
 ;PCODE: $000006BB VOL: 0
+; 0000 014B sprintf(display_buffer, "Temp : %d.%d C !HOT!", I_Temp, D_Temp);
 ;PCODE: $000006BC VOL: 0
 ;PCODE: $000006BD VOL: 0
 ;PCODE: $000006BE VOL: 0
@@ -2116,11 +2114,11 @@ _0x31:
 ;PCODE: $000006C7 VOL: 0
 ;PCODE: $000006C8 VOL: 0
 ;PCODE: $000006C9 VOL: 0
-; 0000 014E } else {
 ;PCODE: $000006CA VOL: 0
+; 0000 014C } else {
 ;PCODE: $000006CB VOL: 0
-; 0000 014F sprintf(display_buffer, "Temp : %d.%d C", I_Temp, D_Temp);
 ;PCODE: $000006CC VOL: 0
+; 0000 014D sprintf(display_buffer, "Temp : %d.%d C", I_Temp, D_Temp);
 ;PCODE: $000006CD VOL: 0
 ;PCODE: $000006CE VOL: 0
 ;PCODE: $000006CF VOL: 0
@@ -2135,20 +2133,20 @@ _0x31:
 ;PCODE: $000006D8 VOL: 0
 ;PCODE: $000006D9 VOL: 0
 ;PCODE: $000006DA VOL: 0
-; 0000 0150 }
 ;PCODE: $000006DB VOL: 0
-; 0000 0151 ssd1306_print(display_buffer);
+; 0000 014E }
 ;PCODE: $000006DC VOL: 0
+; 0000 014F ssd1306_print(display_buffer);
 ;PCODE: $000006DD VOL: 0
-; 0000 0152 
-; 0000 0153 ssd1306_set_cursor(0, 3);
 ;PCODE: $000006DE VOL: 0
+; 0000 0150 
+; 0000 0151 ssd1306_set_cursor(0, 3);
 ;PCODE: $000006DF VOL: 0
 ;PCODE: $000006E0 VOL: 0
 ;PCODE: $000006E1 VOL: 0
 ;PCODE: $000006E2 VOL: 0
-; 0000 0154 sprintf(display_buffer, "Hum  : %d.%d %%", I_RH, D_RH);
 ;PCODE: $000006E3 VOL: 0
+; 0000 0152 sprintf(display_buffer, "Hum  : %d.%d %%", I_RH, D_RH);
 ;PCODE: $000006E4 VOL: 0
 ;PCODE: $000006E5 VOL: 0
 ;PCODE: $000006E6 VOL: 0
@@ -2163,94 +2161,94 @@ _0x31:
 ;PCODE: $000006EF VOL: 0
 ;PCODE: $000006F0 VOL: 0
 ;PCODE: $000006F1 VOL: 0
-; 0000 0155 ssd1306_print(display_buffer);
 ;PCODE: $000006F2 VOL: 0
+; 0000 0153 ssd1306_print(display_buffer);
 ;PCODE: $000006F3 VOL: 0
-; 0000 0156 } else {
 ;PCODE: $000006F4 VOL: 0
+; 0000 0154 } else {
 ;PCODE: $000006F5 VOL: 0
-; 0000 0157 ssd1306_set_cursor(0, 2);
 ;PCODE: $000006F6 VOL: 0
+; 0000 0155 ssd1306_set_cursor(0, 2);
 ;PCODE: $000006F7 VOL: 0
 ;PCODE: $000006F8 VOL: 0
 ;PCODE: $000006F9 VOL: 0
 ;PCODE: $000006FA VOL: 0
-; 0000 0158 ssd1306_print("DHT11: Error");
 ;PCODE: $000006FB VOL: 0
+; 0000 0156 ssd1306_print("DHT11: Error");
 ;PCODE: $000006FC VOL: 0
 ;PCODE: $000006FD VOL: 0
-; 0000 0159 }
 ;PCODE: $000006FE VOL: 0
-; 0000 015A 
-; 0000 015B // Gate status
-; 0000 015C ssd1306_set_cursor(0, 5);
+; 0000 0157 }
 ;PCODE: $000006FF VOL: 0
+; 0000 0158 
+; 0000 0159 // Gate status
+; 0000 015A ssd1306_set_cursor(0, 5);
 ;PCODE: $00000700 VOL: 0
 ;PCODE: $00000701 VOL: 0
 ;PCODE: $00000702 VOL: 0
 ;PCODE: $00000703 VOL: 0
-; 0000 015D if (hasObstacle) {
 ;PCODE: $00000704 VOL: 0
+; 0000 015B if (hasObstacle) {
 ;PCODE: $00000705 VOL: 0
 ;PCODE: $00000706 VOL: 0
-; 0000 015E ssd1306_print("Gate: OPEN");
 ;PCODE: $00000707 VOL: 0
+; 0000 015C ssd1306_print("Gate: OPEN");
 ;PCODE: $00000708 VOL: 0
 ;PCODE: $00000709 VOL: 0
-; 0000 015F } else {
 ;PCODE: $0000070A VOL: 0
+; 0000 015D } else {
 ;PCODE: $0000070B VOL: 0
-; 0000 0160 ssd1306_print("Gate: CLOSE");
 ;PCODE: $0000070C VOL: 0
+; 0000 015E ssd1306_print("Gate: CLOSE");
 ;PCODE: $0000070D VOL: 0
 ;PCODE: $0000070E VOL: 0
-; 0000 0161 }
 ;PCODE: $0000070F VOL: 0
-; 0000 0162 
-; 0000 0163 // LED status
-; 0000 0164 ssd1306_set_cursor(0, 6);
+; 0000 015F }
 ;PCODE: $00000710 VOL: 0
+; 0000 0160 
+; 0000 0161 // LED status
+; 0000 0162 ssd1306_set_cursor(0, 6);
 ;PCODE: $00000711 VOL: 0
 ;PCODE: $00000712 VOL: 0
 ;PCODE: $00000713 VOL: 0
 ;PCODE: $00000714 VOL: 0
-; 0000 0165 if (led_state) {
 ;PCODE: $00000715 VOL: 0
+; 0000 0163 if (led_state) {
 ;PCODE: $00000716 VOL: 0
 ;PCODE: $00000717 VOL: 0
-; 0000 0166 ssd1306_print("LED: ON");
 ;PCODE: $00000718 VOL: 0
+; 0000 0164 ssd1306_print("LED: ON");
 ;PCODE: $00000719 VOL: 0
 ;PCODE: $0000071A VOL: 0
-; 0000 0167 } else {
 ;PCODE: $0000071B VOL: 0
+; 0000 0165 } else {
 ;PCODE: $0000071C VOL: 0
-; 0000 0168 ssd1306_print("LED: OFF");
 ;PCODE: $0000071D VOL: 0
+; 0000 0166 ssd1306_print("LED: OFF");
 ;PCODE: $0000071E VOL: 0
 ;PCODE: $0000071F VOL: 0
-; 0000 0169 }
 ;PCODE: $00000720 VOL: 0
-; 0000 016A 
-; 0000 016B // Temperature alert status
-; 0000 016C ssd1306_set_cursor(68, 5);
+; 0000 0167 }
 ;PCODE: $00000721 VOL: 0
+; 0000 0168 
+; 0000 0169 // Temperature alert status
+; 0000 016A ssd1306_set_cursor(68, 5);
 ;PCODE: $00000722 VOL: 0
 ;PCODE: $00000723 VOL: 0
 ;PCODE: $00000724 VOL: 0
 ;PCODE: $00000725 VOL: 0
-; 0000 016D if (temp_alert_active) {
 ;PCODE: $00000726 VOL: 0
+; 0000 016B if (temp_alert_active) {
 ;PCODE: $00000727 VOL: 0
 ;PCODE: $00000728 VOL: 0
-; 0000 016E unsigned long remaining = 5000 - (millis() - temp_alert_start_time);
-; 0000 016F sprintf(display_buffer, "ALERT:%us", (unsigned int)(remaining/1000 + 1));
 ;PCODE: $00000729 VOL: 0
+; 0000 016C unsigned long remaining = 5000 - (millis() - temp_alert_start_time);
+; 0000 016D sprintf(display_buffer, "ALERT:%us", (unsigned int)(remaining/1000 + 1));
+;PCODE: $0000072A VOL: 0
 ;	current_millis -> Y+30
 ;	uptime_seconds_long -> Y+26
 ;	uptime_formatted -> Y+10
 ;	remaining -> Y+0
-;PCODE: $0000072A VOL: 0
 ;PCODE: $0000072B VOL: 0
 ;PCODE: $0000072C VOL: 0
 ;PCODE: $0000072D VOL: 0
@@ -2273,33 +2271,33 @@ _0x31:
 ;PCODE: $0000073E VOL: 0
 ;PCODE: $0000073F VOL: 0
 ;PCODE: $00000740 VOL: 0
-; 0000 0170 ssd1306_print(display_buffer);
 ;PCODE: $00000741 VOL: 0
+; 0000 016E ssd1306_print(display_buffer);
 ;PCODE: $00000742 VOL: 0
-; 0000 0171 }
 ;PCODE: $00000743 VOL: 0
-; 0000 0172 
-; 0000 0173 // Clap debug info (can be removed after testing)
-; 0000 0174 ssd1306_set_cursor(64, 6);
+; 0000 016F }
 ;PCODE: $00000744 VOL: 0
+; 0000 0170 
+; 0000 0171 // Clap debug info (can be removed after testing)
+; 0000 0172 ssd1306_set_cursor(64, 6);
 ;PCODE: $00000745 VOL: 0
 ;PCODE: $00000746 VOL: 0
 ;PCODE: $00000747 VOL: 0
 ;PCODE: $00000748 VOL: 0
 ;PCODE: $00000749 VOL: 0
-; 0000 0175 if (waiting_for_second_clap) {
 ;PCODE: $0000074A VOL: 0
+; 0000 0173 if (waiting_for_second_clap) {
 ;PCODE: $0000074B VOL: 0
 ;PCODE: $0000074C VOL: 0
-; 0000 0176 ssd1306_print("Wait2nd");
 ;PCODE: $0000074D VOL: 0
+; 0000 0174 ssd1306_print("Wait2nd");
 ;PCODE: $0000074E VOL: 0
 ;PCODE: $0000074F VOL: 0
-; 0000 0177 } else {
 ;PCODE: $00000750 VOL: 0
+; 0000 0175 } else {
 ;PCODE: $00000751 VOL: 0
-; 0000 0178 sprintf(display_buffer, "C:%d", clap_count);
 ;PCODE: $00000752 VOL: 0
+; 0000 0176 sprintf(display_buffer, "C:%d", clap_count);
 ;PCODE: $00000753 VOL: 0
 ;PCODE: $00000754 VOL: 0
 ;PCODE: $00000755 VOL: 0
@@ -2311,30 +2309,30 @@ _0x31:
 ;PCODE: $0000075B VOL: 0
 ;PCODE: $0000075C VOL: 0
 ;PCODE: $0000075D VOL: 0
-; 0000 0179 ssd1306_print(display_buffer);
 ;PCODE: $0000075E VOL: 0
+; 0000 0177 ssd1306_print(display_buffer);
 ;PCODE: $0000075F VOL: 0
-; 0000 017A }
 ;PCODE: $00000760 VOL: 0
-; 0000 017B 
-; 0000 017C // System uptime - ENHANCED with human readable format
-; 0000 017D ssd1306_set_cursor(0, 7);
+; 0000 0178 }
 ;PCODE: $00000761 VOL: 0
+; 0000 0179 
+; 0000 017A // System uptime - ENHANCED with human readable format
+; 0000 017B ssd1306_set_cursor(0, 7);
 ;PCODE: $00000762 VOL: 0
 ;PCODE: $00000763 VOL: 0
 ;PCODE: $00000764 VOL: 0
 ;PCODE: $00000765 VOL: 0
-; 0000 017E 
-; 0000 017F // Get current values
-; 0000 0180 current_millis = millis();
 ;PCODE: $00000766 VOL: 0
+; 0000 017C 
+; 0000 017D // Get current values
+; 0000 017E current_millis = millis();
 ;PCODE: $00000767 VOL: 0
-; 0000 0181 uptime_seconds = get_uptime_seconds();
 ;PCODE: $00000768 VOL: 0
+; 0000 017F uptime_seconds = get_uptime_seconds();
 ;PCODE: $00000769 VOL: 0
-; 0000 0182 
-; 0000 0183 if (current_millis > 0 && uptime_seconds > 0) {
 ;PCODE: $0000076A VOL: 0
+; 0000 0180 
+; 0000 0181 if (current_millis > 0 && uptime_seconds > 0) {
 ;PCODE: $0000076B VOL: 0
 ;PCODE: $0000076C VOL: 0
 ;PCODE: $0000076D VOL: 0
@@ -2343,18 +2341,18 @@ _0x31:
 ;PCODE: $00000770 VOL: 0
 ;PCODE: $00000771 VOL: 0
 ;PCODE: $00000772 VOL: 0
-; 0000 0184 // Format uptime in human readable format
-; 0000 0185 uptime_seconds_long = (unsigned long)uptime_seconds;
 ;PCODE: $00000773 VOL: 0
+; 0000 0182 // Format uptime in human readable format
+; 0000 0183 uptime_seconds_long = (unsigned long)uptime_seconds;
 ;PCODE: $00000774 VOL: 0
 ;PCODE: $00000775 VOL: 0
-; 0000 0186 format_uptime(uptime_formatted, uptime_seconds_long);
 ;PCODE: $00000776 VOL: 0
+; 0000 0184 format_uptime(uptime_formatted, uptime_seconds_long);
 ;PCODE: $00000777 VOL: 0
 ;PCODE: $00000778 VOL: 0
 ;PCODE: $00000779 VOL: 0
-; 0000 0187 sprintf(display_buffer, "Up:%s", uptime_formatted);
 ;PCODE: $0000077A VOL: 0
+; 0000 0185 sprintf(display_buffer, "Up:%s", uptime_formatted);
 ;PCODE: $0000077B VOL: 0
 ;PCODE: $0000077C VOL: 0
 ;PCODE: $0000077D VOL: 0
@@ -2366,23 +2364,23 @@ _0x31:
 ;PCODE: $00000783 VOL: 0
 ;PCODE: $00000784 VOL: 0
 ;PCODE: $00000785 VOL: 0
-; 0000 0188 ssd1306_print(display_buffer);
 ;PCODE: $00000786 VOL: 0
+; 0000 0186 ssd1306_print(display_buffer);
 ;PCODE: $00000787 VOL: 0
-; 0000 0189 } else if (current_millis > 0) {
 ;PCODE: $00000788 VOL: 0
+; 0000 0187 } else if (current_millis > 0) {
 ;PCODE: $00000789 VOL: 0
 ;PCODE: $0000078A VOL: 0
 ;PCODE: $0000078B VOL: 0
 ;PCODE: $0000078C VOL: 0
-; 0000 018A // Fallback 1: Show milliseconds/100
-; 0000 018B deciseconds = (unsigned int)(current_millis / 100UL);
 ;PCODE: $0000078D VOL: 0
+; 0000 0188 // Fallback 1: Show milliseconds/100
+; 0000 0189 deciseconds = (unsigned int)(current_millis / 100UL);
 ;PCODE: $0000078E VOL: 0
 ;PCODE: $0000078F VOL: 0
 ;PCODE: $00000790 VOL: 0
-; 0000 018C sprintf(display_buffer, "Up: %u.%us", deciseconds/10, deciseconds%10);
 ;PCODE: $00000791 VOL: 0
+; 0000 018A sprintf(display_buffer, "Up: %u.%us", deciseconds/10, deciseconds%10);
 ;PCODE: $00000792 VOL: 0
 ;PCODE: $00000793 VOL: 0
 ;PCODE: $00000794 VOL: 0
@@ -2401,23 +2399,23 @@ _0x31:
 ;PCODE: $000007A1 VOL: 0
 ;PCODE: $000007A2 VOL: 0
 ;PCODE: $000007A3 VOL: 0
-; 0000 018D ssd1306_print(display_buffer);
 ;PCODE: $000007A4 VOL: 0
+; 0000 018B ssd1306_print(display_buffer);
 ;PCODE: $000007A5 VOL: 0
-; 0000 018E } else {
 ;PCODE: $000007A6 VOL: 0
+; 0000 018C } else {
 ;PCODE: $000007A7 VOL: 0
-; 0000 018F // Fallback 2: Show raw counter
-; 0000 0190 #asm("cli");
 ;PCODE: $000007A8 VOL: 0
-; 0000 0191 raw_counter = (unsigned int)(millis_counter & 0xFFFF);
-;PCODE: $000007A9 VOL: 1
-;PCODE: $000007AA VOL: 0
+; 0000 018D // Fallback 2: Show raw counter
+; 0000 018E #asm("cli");
+;PCODE: $000007A9 VOL: 0
+; 0000 018F raw_counter = (unsigned int)(millis_counter & 0xFFFF);
+;PCODE: $000007AA VOL: 1
 ;PCODE: $000007AB VOL: 0
-; 0000 0192 #asm("sei");
 ;PCODE: $000007AC VOL: 0
-; 0000 0193 sprintf(display_buffer, "Cnt: %u", raw_counter);
+; 0000 0190 #asm("sei");
 ;PCODE: $000007AD VOL: 0
+; 0000 0191 sprintf(display_buffer, "Cnt: %u", raw_counter);
 ;PCODE: $000007AE VOL: 0
 ;PCODE: $000007AF VOL: 0
 ;PCODE: $000007B0 VOL: 0
@@ -2429,173 +2427,173 @@ _0x31:
 ;PCODE: $000007B6 VOL: 0
 ;PCODE: $000007B7 VOL: 0
 ;PCODE: $000007B8 VOL: 0
-; 0000 0194 ssd1306_print(display_buffer);
 ;PCODE: $000007B9 VOL: 0
+; 0000 0192 ssd1306_print(display_buffer);
 ;PCODE: $000007BA VOL: 0
-; 0000 0195 }
 ;PCODE: $000007BB VOL: 0
+; 0000 0193 }
 ;PCODE: $000007BC VOL: 0
-; 0000 0196 
-; 0000 0197 ssd1306_display();
 ;PCODE: $000007BD VOL: 0
-; 0000 0198 }
+; 0000 0194 
+; 0000 0195 ssd1306_display();
 ;PCODE: $000007BE VOL: 0
+; 0000 0196 }
 ;PCODE: $000007BF VOL: 0
 ;PCODE: $000007C0 VOL: 0
 ;PCODE: $000007C1 VOL: 0
+;PCODE: $000007C2 VOL: 0
 
 	.DSEG
 _0xB3:
 	.BYTE 0x4F
 ;void debug_timer() {
-; 0000 019B void debug_timer() {
+; 0000 0199 void debug_timer() {
 
 	.CSEG
-;PCODE: $000007C2 VOL: 0
 ;PCODE: $000007C3 VOL: 0
-; 0000 019C unsigned long current_time;
-; 0000 019D static unsigned char debug_led = 0;
-; 0000 019E 
-; 0000 019F current_time = millis();
 ;PCODE: $000007C4 VOL: 0
-;	current_time -> Y+0
+; 0000 019A unsigned long current_time;
+; 0000 019B static unsigned char debug_led = 0;
+; 0000 019C 
+; 0000 019D current_time = millis();
 ;PCODE: $000007C5 VOL: 0
+;	current_time -> Y+0
 ;PCODE: $000007C6 VOL: 0
-; 0000 01A0 
-; 0000 01A1 // Update debug seconds counter
-; 0000 01A2 if (current_time - debug_last_second >= 1000) {
 ;PCODE: $000007C7 VOL: 0
+; 0000 019E 
+; 0000 019F // Update debug seconds counter
+; 0000 01A0 if (current_time - debug_last_second >= 1000) {
 ;PCODE: $000007C8 VOL: 0
 ;PCODE: $000007C9 VOL: 0
 ;PCODE: $000007CA VOL: 0
 ;PCODE: $000007CB VOL: 0
-; 0000 01A3 debug_seconds++;
 ;PCODE: $000007CC VOL: 0
+; 0000 01A1 debug_seconds++;
 ;PCODE: $000007CD VOL: 0
 ;PCODE: $000007CE VOL: 0
 ;PCODE: $000007CF VOL: 0
-; 0000 01A4 debug_last_second = current_time;
 ;PCODE: $000007D0 VOL: 0
+; 0000 01A2 debug_last_second = current_time;
 ;PCODE: $000007D1 VOL: 0
-; 0000 01A5 
-; 0000 01A6 // Blink built-in LED every second for visual confirmation
-; 0000 01A7 debug_led = !debug_led;
 ;PCODE: $000007D2 VOL: 0
+; 0000 01A3 
+; 0000 01A4 // Blink built-in LED every second for visual confirmation
+; 0000 01A5 debug_led = !debug_led;
 ;PCODE: $000007D3 VOL: 0
 ;PCODE: $000007D4 VOL: 0
-; 0000 01A8 if (debug_led) {
 ;PCODE: $000007D5 VOL: 0
+; 0000 01A6 if (debug_led) {
 ;PCODE: $000007D6 VOL: 0
 ;PCODE: $000007D7 VOL: 0
-; 0000 01A9 PORTB |= (1 << 5);  // Arduino pin 13
 ;PCODE: $000007D8 VOL: 0
+; 0000 01A7 PORTB |= (1 << 5);  // Arduino pin 13
 ;PCODE: $000007D9 VOL: 0
-; 0000 01AA } else {
 ;PCODE: $000007DA VOL: 0
+; 0000 01A8 } else {
 ;PCODE: $000007DB VOL: 0
-; 0000 01AB PORTB &= ~(1 << 5);
 ;PCODE: $000007DC VOL: 0
+; 0000 01A9 PORTB &= ~(1 << 5);
 ;PCODE: $000007DD VOL: 0
-; 0000 01AC }
 ;PCODE: $000007DE VOL: 0
-; 0000 01AD }
-; 0000 01AE }
+; 0000 01AA }
 ;PCODE: $000007DF VOL: 0
+; 0000 01AB }
+; 0000 01AC }
 ;PCODE: $000007E0 VOL: 0
 ;PCODE: $000007E1 VOL: 0
 ;PCODE: $000007E2 VOL: 0
-;void system_init() {
-; 0000 01B1 void system_init() {
 ;PCODE: $000007E3 VOL: 0
+;void system_init() {
+; 0000 01AF void system_init() {
 ;PCODE: $000007E4 VOL: 0
-; 0000 01B2 int i;
-; 0000 01B3 
-; 0000 01B4 // Configure debug LED (pin 13)
-; 0000 01B5 DDRB |= (1 << 5);
 ;PCODE: $000007E5 VOL: 0
+; 0000 01B0 int i;
+; 0000 01B1 
+; 0000 01B2 // Configure debug LED (pin 13)
+; 0000 01B3 DDRB |= (1 << 5);
 ;PCODE: $000007E6 VOL: 0
-;	i -> R16,R17
 ;PCODE: $000007E7 VOL: 0
+;	i -> R16,R17
 ;PCODE: $000007E8 VOL: 0
-; 0000 01B6 PORTB &= ~(1 << 5);
 ;PCODE: $000007E9 VOL: 0
+; 0000 01B4 PORTB &= ~(1 << 5);
 ;PCODE: $000007EA VOL: 0
-; 0000 01B7 
-; 0000 01B8 // Initialize OLED
-; 0000 01B9 SSD1306_Init();
 ;PCODE: $000007EB VOL: 0
-; 0000 01BA ssd1306_clear();
+; 0000 01B5 
+; 0000 01B6 // Initialize OLED
+; 0000 01B7 SSD1306_Init();
 ;PCODE: $000007EC VOL: 0
-; 0000 01BB 
-; 0000 01BC // Show startup message
-; 0000 01BD ssd1306_set_cursor(0, 2);
+; 0000 01B8 ssd1306_clear();
 ;PCODE: $000007ED VOL: 0
+; 0000 01B9 
+; 0000 01BA // Show startup message
+; 0000 01BB ssd1306_set_cursor(0, 2);
 ;PCODE: $000007EE VOL: 0
 ;PCODE: $000007EF VOL: 0
 ;PCODE: $000007F0 VOL: 0
 ;PCODE: $000007F1 VOL: 0
-; 0000 01BE ssd1306_print("Initializing...");
 ;PCODE: $000007F2 VOL: 0
+; 0000 01BC ssd1306_print("Initializing...");
 ;PCODE: $000007F3 VOL: 0
 ;PCODE: $000007F4 VOL: 0
-; 0000 01BF ssd1306_set_cursor(0, 4);
 ;PCODE: $000007F5 VOL: 0
+; 0000 01BD ssd1306_set_cursor(0, 4);
 ;PCODE: $000007F6 VOL: 0
 ;PCODE: $000007F7 VOL: 0
 ;PCODE: $000007F8 VOL: 0
 ;PCODE: $000007F9 VOL: 0
-; 0000 01C0 ssd1306_print("Anh va Hoi design");
 ;PCODE: $000007FA VOL: 0
+; 0000 01BE ssd1306_print("Anh va Hoi design");
 ;PCODE: $000007FB VOL: 0
 ;PCODE: $000007FC VOL: 0
-; 0000 01C1 ssd1306_display();
 ;PCODE: $000007FD VOL: 0
-; 0000 01C2 delay_ms(2000);
+; 0000 01BF ssd1306_display();
 ;PCODE: $000007FE VOL: 0
+; 0000 01C0 delay_ms(2000);
 ;PCODE: $000007FF VOL: 0
-; 0000 01C3 
-; 0000 01C4 // Initialize timer FIRST - IMPORTANT
-; 0000 01C5 timer0_init();
 ;PCODE: $00000800 VOL: 0
-; 0000 01C6 
-; 0000 01C7 // Initialize servo
-; 0000 01C8 servo_setup();
+; 0000 01C1 
+; 0000 01C2 // Initialize timer FIRST - IMPORTANT
+; 0000 01C3 timer0_init();
 ;PCODE: $00000801 VOL: 0
-; 0000 01C9 close_gate();
+; 0000 01C4 
+; 0000 01C5 // Initialize servo
+; 0000 01C6 servo_setup();
 ;PCODE: $00000802 VOL: 0
-; 0000 01CA 
-; 0000 01CB // Configure pins
-; 0000 01CC // Gate control pins
-; 0000 01CD DDRC &= ~(1 << FC51_PIN);    // FC51 input
+; 0000 01C7 close_gate();
 ;PCODE: $00000803 VOL: 0
+; 0000 01C8 
+; 0000 01C9 // Configure pins
+; 0000 01CA // Gate control pins
+; 0000 01CB DDRC &= ~(1 << FC51_PIN);    // FC51 input
 ;PCODE: $00000804 VOL: 0
-; 0000 01CE PORTC |= (1 << FC51_PIN);    // Pull-up
 ;PCODE: $00000805 VOL: 0
+; 0000 01CC PORTC |= (1 << FC51_PIN);    // Pull-up
 ;PCODE: $00000806 VOL: 0
-; 0000 01CF DDRD |= (1 << BUZZER_PIN);   // Buzzer output
 ;PCODE: $00000807 VOL: 0
+; 0000 01CD DDRD |= (1 << BUZZER_PIN);   // Buzzer output
 ;PCODE: $00000808 VOL: 0
-; 0000 01D0 PORTD &= ~(1 << BUZZER_PIN); // Buzzer off
 ;PCODE: $00000809 VOL: 0
+; 0000 01CE PORTD &= ~(1 << BUZZER_PIN); // Buzzer off
 ;PCODE: $0000080A VOL: 0
-; 0000 01D1 
-; 0000 01D2 // Clap switch pins
-; 0000 01D3 DDRD |= (1 << LED_PIN);      // LED output
 ;PCODE: $0000080B VOL: 0
+; 0000 01CF 
+; 0000 01D0 // Clap switch pins
+; 0000 01D1 DDRD |= (1 << LED_PIN);      // LED output
 ;PCODE: $0000080C VOL: 0
-; 0000 01D4 PORTD &= ~(1 << LED_PIN);    // LED off
 ;PCODE: $0000080D VOL: 0
+; 0000 01D2 PORTD &= ~(1 << LED_PIN);    // LED off
 ;PCODE: $0000080E VOL: 0
-; 0000 01D5 DDRC &= ~(1 << SOUND_SENSOR_PIN); // Sound sensor input
 ;PCODE: $0000080F VOL: 0
+; 0000 01D3 DDRC &= ~(1 << SOUND_SENSOR_PIN); // Sound sensor input
 ;PCODE: $00000810 VOL: 0
-; 0000 01D6 PORTC |= (1 << SOUND_SENSOR_PIN); // Pull-up
 ;PCODE: $00000811 VOL: 0
+; 0000 01D4 PORTC |= (1 << SOUND_SENSOR_PIN); // Pull-up
 ;PCODE: $00000812 VOL: 0
-; 0000 01D7 
-; 0000 01D8 // Startup LED sequence
-; 0000 01D9 for (i = 0; i < 3; i++) {
 ;PCODE: $00000813 VOL: 0
+; 0000 01D5 
+; 0000 01D6 // Startup LED sequence
+; 0000 01D7 for (i = 0; i < 3; i++) {
 ;PCODE: $00000814 VOL: 0
 ;PCODE: $00000815 VOL: 0
 ;PCODE: $00000816 VOL: 0
@@ -2604,256 +2602,256 @@ _0xB3:
 ;PCODE: $00000819 VOL: 0
 ;PCODE: $0000081A VOL: 0
 ;PCODE: $0000081B VOL: 0
-; 0000 01DA PORTD |= (1 << LED_PIN);
 ;PCODE: $0000081C VOL: 0
+; 0000 01D8 PORTD |= (1 << LED_PIN);
 ;PCODE: $0000081D VOL: 0
-; 0000 01DB delay_ms(200);
 ;PCODE: $0000081E VOL: 0
+; 0000 01D9 delay_ms(200);
 ;PCODE: $0000081F VOL: 0
 ;PCODE: $00000820 VOL: 0
-; 0000 01DC PORTD &= ~(1 << LED_PIN);
 ;PCODE: $00000821 VOL: 0
+; 0000 01DA PORTD &= ~(1 << LED_PIN);
 ;PCODE: $00000822 VOL: 0
-; 0000 01DD delay_ms(200);
 ;PCODE: $00000823 VOL: 0
+; 0000 01DB delay_ms(200);
 ;PCODE: $00000824 VOL: 0
 ;PCODE: $00000825 VOL: 0
-; 0000 01DE }
 ;PCODE: $00000826 VOL: 0
+; 0000 01DC }
 ;PCODE: $00000827 VOL: 0
 ;PCODE: $00000828 VOL: 0
 ;PCODE: $00000829 VOL: 0
 ;PCODE: $0000082A VOL: 0
-; 0000 01DF 
-; 0000 01E0 // Initialize variables
-; 0000 01E1 led_state = 0;
 ;PCODE: $0000082B VOL: 0
+; 0000 01DD 
+; 0000 01DE // Initialize variables
+; 0000 01DF led_state = 0;
 ;PCODE: $0000082C VOL: 0
-; 0000 01E2 sound_detected = 0;
 ;PCODE: $0000082D VOL: 0
+; 0000 01E0 sound_detected = 0;
 ;PCODE: $0000082E VOL: 0
-; 0000 01E3 last_sound_state = 1;
 ;PCODE: $0000082F VOL: 0
+; 0000 01E1 last_sound_state = 1;
 ;PCODE: $00000830 VOL: 0
-; 0000 01E4 clap_timer = 0;
 ;PCODE: $00000831 VOL: 0
+; 0000 01E2 clap_timer = 0;
 ;PCODE: $00000832 VOL: 0
-; 0000 01E5 clap_count = 0;
 ;PCODE: $00000833 VOL: 0
+; 0000 01E3 clap_count = 0;
 ;PCODE: $00000834 VOL: 0
-; 0000 01E6 waiting_for_second_clap = 0;
 ;PCODE: $00000835 VOL: 0
+; 0000 01E4 waiting_for_second_clap = 0;
 ;PCODE: $00000836 VOL: 0
-; 0000 01E7 hasObstacle = 0;
 ;PCODE: $00000837 VOL: 0
+; 0000 01E5 hasObstacle = 0;
 ;PCODE: $00000838 VOL: 0
-; 0000 01E8 past_obstacle = 0;
 ;PCODE: $00000839 VOL: 0
+; 0000 01E6 past_obstacle = 0;
 ;PCODE: $0000083A VOL: 0
-; 0000 01E9 last_dht_read = 0;
 ;PCODE: $0000083B VOL: 0
+; 0000 01E7 last_dht_read = 0;
 ;PCODE: $0000083C VOL: 0
-; 0000 01EA last_display_update = 0;
 ;PCODE: $0000083D VOL: 0
+; 0000 01E8 last_display_update = 0;
 ;PCODE: $0000083E VOL: 0
-; 0000 01EB debug_seconds = 0;
 ;PCODE: $0000083F VOL: 0
+; 0000 01E9 debug_seconds = 0;
 ;PCODE: $00000840 VOL: 0
-; 0000 01EC debug_last_second = 0;
 ;PCODE: $00000841 VOL: 0
+; 0000 01EA debug_last_second = 0;
 ;PCODE: $00000842 VOL: 0
-; 0000 01ED 
-; 0000 01EE // Initialize temperature alert variables
-; 0000 01EF temp_alert_active = 0;
 ;PCODE: $00000843 VOL: 0
+; 0000 01EB 
+; 0000 01EC // Initialize temperature alert variables
+; 0000 01ED temp_alert_active = 0;
 ;PCODE: $00000844 VOL: 0
-; 0000 01F0 temp_alert_start_time = 0;
 ;PCODE: $00000845 VOL: 0
+; 0000 01EE temp_alert_start_time = 0;
 ;PCODE: $00000846 VOL: 0
-; 0000 01F1 temp_alert_last_toggle = 0;
 ;PCODE: $00000847 VOL: 0
+; 0000 01EF temp_alert_last_toggle = 0;
 ;PCODE: $00000848 VOL: 0
-; 0000 01F2 temp_alert_buzzer_state = 0;
 ;PCODE: $00000849 VOL: 0
+; 0000 01F0 temp_alert_buzzer_state = 0;
 ;PCODE: $0000084A VOL: 0
-; 0000 01F3 
-; 0000 01F4 // Wait for timer to start
-; 0000 01F5 delay_ms(100);
 ;PCODE: $0000084B VOL: 0
+; 0000 01F1 
+; 0000 01F2 // Wait for timer to start
+; 0000 01F3 delay_ms(100);
 ;PCODE: $0000084C VOL: 0
 ;PCODE: $0000084D VOL: 0
-; 0000 01F6 
-; 0000 01F7 ssd1306_clear();
 ;PCODE: $0000084E VOL: 0
-; 0000 01F8 ssd1306_set_cursor(0, 3);
+; 0000 01F4 
+; 0000 01F5 ssd1306_clear();
 ;PCODE: $0000084F VOL: 0
+; 0000 01F6 ssd1306_set_cursor(0, 3);
 ;PCODE: $00000850 VOL: 0
 ;PCODE: $00000851 VOL: 0
 ;PCODE: $00000852 VOL: 0
 ;PCODE: $00000853 VOL: 0
-; 0000 01F9 ssd1306_print("System Ready!");
 ;PCODE: $00000854 VOL: 0
+; 0000 01F7 ssd1306_print("System Ready!");
 ;PCODE: $00000855 VOL: 0
 ;PCODE: $00000856 VOL: 0
-; 0000 01FA 
-; 0000 01FB // Show timer status
-; 0000 01FC ssd1306_set_cursor(0, 5);
 ;PCODE: $00000857 VOL: 0
+; 0000 01F8 
+; 0000 01F9 // Show timer status
+; 0000 01FA ssd1306_set_cursor(0, 5);
 ;PCODE: $00000858 VOL: 0
 ;PCODE: $00000859 VOL: 0
 ;PCODE: $0000085A VOL: 0
 ;PCODE: $0000085B VOL: 0
-; 0000 01FD if (millis() > 0) {
 ;PCODE: $0000085C VOL: 0
+; 0000 01FB if (millis() > 0) {
 ;PCODE: $0000085D VOL: 0
 ;PCODE: $0000085E VOL: 0
-; 0000 01FE ssd1306_print("Timer: OK");
 ;PCODE: $0000085F VOL: 0
+; 0000 01FC ssd1306_print("Timer: OK");
 ;PCODE: $00000860 VOL: 0
 ;PCODE: $00000861 VOL: 0
-; 0000 01FF } else {
 ;PCODE: $00000862 VOL: 0
+; 0000 01FD } else {
 ;PCODE: $00000863 VOL: 0
-; 0000 0200 ssd1306_print("Timer: ERROR");
 ;PCODE: $00000864 VOL: 0
+; 0000 01FE ssd1306_print("Timer: ERROR");
 ;PCODE: $00000865 VOL: 0
 ;PCODE: $00000866 VOL: 0
-; 0000 0201 }
 ;PCODE: $00000867 VOL: 0
-; 0000 0202 
-; 0000 0203 ssd1306_display();
+; 0000 01FF }
 ;PCODE: $00000868 VOL: 0
-; 0000 0204 delay_ms(1000);
+; 0000 0200 
+; 0000 0201 ssd1306_display();
 ;PCODE: $00000869 VOL: 0
+; 0000 0202 delay_ms(1000);
 ;PCODE: $0000086A VOL: 0
-; 0000 0205 }
 ;PCODE: $0000086B VOL: 0
+; 0000 0203 }
 ;PCODE: $0000086C VOL: 0
 ;PCODE: $0000086D VOL: 0
+;PCODE: $0000086E VOL: 0
 
 	.DSEG
 _0xCA:
 	.BYTE 0x47
 ;void main(void) {
-; 0000 0208 void main(void) {
+; 0000 0206 void main(void) {
 
 	.CSEG
-;PCODE: $0000086E VOL: 0
-; 0000 0209 unsigned long current_time;
-; 0000 020A 
-; 0000 020B // System initialization
-; 0000 020C system_init();
 ;PCODE: $0000086F VOL: 0
-;	current_time -> Y+0
+; 0000 0207 unsigned long current_time;
+; 0000 0208 
+; 0000 0209 // System initialization
+; 0000 020A system_init();
 ;PCODE: $00000870 VOL: 0
-; 0000 020D 
-; 0000 020E while (1) {
+;	current_time -> Y+0
 ;PCODE: $00000871 VOL: 0
-; 0000 020F current_time = millis();
+; 0000 020B 
+; 0000 020C while (1) {
 ;PCODE: $00000872 VOL: 0
+; 0000 020D current_time = millis();
 ;PCODE: $00000873 VOL: 0
-; 0000 0210 
-; 0000 0211 // Debug timer function
-; 0000 0212 debug_timer();
 ;PCODE: $00000874 VOL: 0
-; 0000 0213 
-; 0000 0214 // Read DHT11 every 2 seconds
-; 0000 0215 if (current_time - last_dht_read >= 2000) {
+; 0000 020E 
+; 0000 020F // Debug timer function
+; 0000 0210 debug_timer();
 ;PCODE: $00000875 VOL: 0
+; 0000 0211 
+; 0000 0212 // Read DHT11 every 2 seconds
+; 0000 0213 if (current_time - last_dht_read >= 2000) {
 ;PCODE: $00000876 VOL: 0
 ;PCODE: $00000877 VOL: 0
 ;PCODE: $00000878 VOL: 0
 ;PCODE: $00000879 VOL: 0
-; 0000 0216 read_dht11();
 ;PCODE: $0000087A VOL: 0
-; 0000 0217 last_dht_read = current_time;
+; 0000 0214 read_dht11();
 ;PCODE: $0000087B VOL: 0
+; 0000 0215 last_dht_read = current_time;
 ;PCODE: $0000087C VOL: 0
-; 0000 0218 }
-; 0000 0219 
-; 0000 021A // Check temperature alert - NEW
-; 0000 021B check_temperature_alert();
 ;PCODE: $0000087D VOL: 0
+; 0000 0216 }
+; 0000 0217 
+; 0000 0218 // Check temperature alert - NEW
+; 0000 0219 check_temperature_alert();
 ;PCODE: $0000087E VOL: 0
-; 0000 021C 
-; 0000 021D // Check obstacle sensor
-; 0000 021E hasObstacle = !(PINC & (1 << FC51_PIN));
 ;PCODE: $0000087F VOL: 0
+; 0000 021A 
+; 0000 021B // Check obstacle sensor
+; 0000 021C hasObstacle = !(PINC & (1 << FC51_PIN));
 ;PCODE: $00000880 VOL: 0
 ;PCODE: $00000881 VOL: 0
 ;PCODE: $00000882 VOL: 0
-; 0000 021F 
-; 0000 0220 if (hasObstacle) {
 ;PCODE: $00000883 VOL: 0
+; 0000 021D 
+; 0000 021E if (hasObstacle) {
 ;PCODE: $00000884 VOL: 0
 ;PCODE: $00000885 VOL: 0
-; 0000 0221 // Object detected - open gate
-; 0000 0222 if (past_obstacle != hasObstacle) {
 ;PCODE: $00000886 VOL: 0
+; 0000 021F // Object detected - open gate
+; 0000 0220 if (past_obstacle != hasObstacle) {
 ;PCODE: $00000887 VOL: 0
 ;PCODE: $00000888 VOL: 0
 ;PCODE: $00000889 VOL: 0
-; 0000 0223 open_gate();
 ;PCODE: $0000088A VOL: 0
-; 0000 0224 // Only sound obstacle buzzer if not in temperature alert mode
-; 0000 0225 if (!temp_alert_active) {
+; 0000 0221 open_gate();
 ;PCODE: $0000088B VOL: 0
+; 0000 0222 // Only sound obstacle buzzer if not in temperature alert mode
+; 0000 0223 if (!temp_alert_active) {
 ;PCODE: $0000088C VOL: 0
 ;PCODE: $0000088D VOL: 0
-; 0000 0226 PORTD |= (1 << BUZZER_PIN);   // Buzzer on
 ;PCODE: $0000088E VOL: 0
+; 0000 0224 PORTD |= (1 << BUZZER_PIN);   // Buzzer on
 ;PCODE: $0000088F VOL: 0
-; 0000 0227 delay_ms(200);
 ;PCODE: $00000890 VOL: 0
+; 0000 0225 delay_ms(200);
 ;PCODE: $00000891 VOL: 0
 ;PCODE: $00000892 VOL: 0
-; 0000 0228 PORTD &= ~(1 << BUZZER_PIN);  // Buzzer off
 ;PCODE: $00000893 VOL: 0
+; 0000 0226 PORTD &= ~(1 << BUZZER_PIN);  // Buzzer off
 ;PCODE: $00000894 VOL: 0
-; 0000 0229 }
-; 0000 022A delay_ms(1000);
 ;PCODE: $00000895 VOL: 0
+; 0000 0227 }
+; 0000 0228 delay_ms(1000);
 ;PCODE: $00000896 VOL: 0
 ;PCODE: $00000897 VOL: 0
-; 0000 022B }
-; 0000 022C } else {
 ;PCODE: $00000898 VOL: 0
+; 0000 0229 }
+; 0000 022A } else {
 ;PCODE: $00000899 VOL: 0
 ;PCODE: $0000089A VOL: 0
-; 0000 022D // No object - close gate
-; 0000 022E close_gate();
 ;PCODE: $0000089B VOL: 0
-; 0000 022F }
+; 0000 022B // No object - close gate
+; 0000 022C close_gate();
 ;PCODE: $0000089C VOL: 0
-; 0000 0230 past_obstacle = hasObstacle;
+; 0000 022D }
 ;PCODE: $0000089D VOL: 0
+; 0000 022E past_obstacle = hasObstacle;
 ;PCODE: $0000089E VOL: 0
-; 0000 0231 
-; 0000 0232 // Process clap switch - CALL ONLY 1 FUNCTION
-; 0000 0233 handle_clap_switch();
 ;PCODE: $0000089F VOL: 0
-; 0000 0234 
-; 0000 0235 // Update display every 500ms
-; 0000 0236 if (current_time - last_display_update >= 500) {
+; 0000 022F 
+; 0000 0230 // Process clap switch - CALL ONLY 1 FUNCTION
+; 0000 0231 handle_clap_switch();
 ;PCODE: $000008A0 VOL: 0
+; 0000 0232 
+; 0000 0233 // Update display every 500ms
+; 0000 0234 if (current_time - last_display_update >= 500) {
 ;PCODE: $000008A1 VOL: 0
 ;PCODE: $000008A2 VOL: 0
 ;PCODE: $000008A3 VOL: 0
 ;PCODE: $000008A4 VOL: 0
-; 0000 0237 update_display();
 ;PCODE: $000008A5 VOL: 0
-; 0000 0238 last_display_update = current_time;
+; 0000 0235 update_display();
 ;PCODE: $000008A6 VOL: 0
+; 0000 0236 last_display_update = current_time;
 ;PCODE: $000008A7 VOL: 0
-; 0000 0239 }
-; 0000 023A 
-; 0000 023B // No delay needed - main loop runs freely
-; 0000 023C }
 ;PCODE: $000008A8 VOL: 0
+; 0000 0237 }
+; 0000 0238 
+; 0000 0239 }
 ;PCODE: $000008A9 VOL: 0
 ;PCODE: $000008AA VOL: 0
-; 0000 023D }
 ;PCODE: $000008AB VOL: 0
+; 0000 023A }
 ;PCODE: $000008AC VOL: 0
 ;PCODE: $000008AD VOL: 0
 ;PCODE: $000008AE VOL: 0
+;PCODE: $000008AF VOL: 0

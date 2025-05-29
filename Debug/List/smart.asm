@@ -1913,10 +1913,13 @@ _timer0_compa_isr:
 	STS  _timer_overflow_count,R30
 ; 0000 004F 
 ; 0000 0050 // Reset overflow counter every second for debug
-; 0000 0051 if (timer_overflow_count >= 250) {  // 250 * 4ms = 1000ms
+; 0000 0051 if (timer_overflow_count >= 1000) {  // 250 * 4ms = 1000ms
 	LDS  R26,_timer_overflow_count
-	CPI  R26,LOW(0xFA)
-	BRLO _0x73
+	CLR  R27
+	CPI  R26,LOW(0x3E8)
+	LDI  R30,HIGH(0x3E8)
+	CPC  R27,R30
+	BRLT _0x73
 ; 0000 0052 timer_overflow_count = 0;
 	LDI  R30,LOW(0)
 	STS  _timer_overflow_count,R30
@@ -2146,7 +2149,7 @@ _servo_setup:
 ; 0000 0089 DDRB |= (1 << 1); // PB1 output (SERVO_PIN)
 	SBI  0x4,1
 ; 0000 008A 
-; 0000 008B // Timer1 setup for 16MHz - exactly like your working code
+; 0000 008B // Timer1 setup
 ; 0000 008C TCCR1A = 0x00;
 	LDI  R30,LOW(0)
 	STS  128,R30
@@ -2187,78 +2190,76 @@ _servo_setup:
 ; 0000 009C void open_gate() {
 _open_gate:
 ; .FSTART _open_gate
-; 0000 009D // Your working "open" values (90 degrees)
-; 0000 009E OCR1AH = 0b00001011;  // 0x0B
+; 0000 009D OCR1AH = 0b00001011;  // 0x0B
 	LDI  R30,LOW(11)
 	STS  137,R30
-; 0000 009F OCR1AL = 0b01111100;  // 0x7C
+; 0000 009E OCR1AL = 0b01111100;  // 0x7C
 	LDI  R30,LOW(124)
 	RJMP _0x2060005
-; 0000 00A0 }
+; 0000 009F }
 ; .FEND
 ;void close_gate() {
-; 0000 00A2 void close_gate() {
+; 0000 00A1 void close_gate() {
 _close_gate:
 ; .FSTART _close_gate
-; 0000 00A3 // Your working "close" values (0 degrees)
-; 0000 00A4 OCR1AH = 0b00000100;  // 0x04
+; 0000 00A2 OCR1AH = 0b00000100;  // 0x04
 _0x2060006:
 	LDI  R30,LOW(4)
 	STS  137,R30
-; 0000 00A5 OCR1AL = 0b00100100;  // 0x24
+; 0000 00A3 OCR1AL = 0b00100100;  // 0x24
 	LDI  R30,LOW(36)
 _0x2060005:
 	STS  136,R30
-; 0000 00A6 }
+; 0000 00A4 }
 	RET
 ; .FEND
 ;void dht_request() {
-; 0000 00A9 void dht_request() {
+; 0000 00A7 void dht_request() {
 _dht_request:
 ; .FSTART _dht_request
-; 0000 00AA DDRD |= (1 << DHT_PIN);
+; 0000 00A8 DDRD |= (1 << DHT_PIN);
 	SBI  0xA,6
-; 0000 00AB PORTD &= ~(1 << DHT_PIN);
+; 0000 00A9 PORTD &= ~(1 << DHT_PIN);
 	CBI  0xB,6
-; 0000 00AC delay_ms(20);
+; 0000 00AA delay_ms(20);
 	LDI  R26,LOW(20)
 	LDI  R27,0
 	CALL _delay_ms
-; 0000 00AD PORTD |= (1 << DHT_PIN);
+; 0000 00AB PORTD |= (1 << DHT_PIN);
 	SBI  0xB,6
-; 0000 00AE delay_us(30);
+; 0000 00AC delay_us(30);
 	__DELAY_USB 160
-; 0000 00AF }
+; 0000 00AD }
 	RET
 ; .FEND
 ;void dht_response() {
-; 0000 00B1 void dht_response() {
+; 0000 00AF void dht_response() {
 _dht_response:
 ; .FSTART _dht_response
-; 0000 00B2 DDRD &= ~(1 << DHT_PIN);
+; 0000 00B0 DDRD &= ~(1 << DHT_PIN);
 	CBI  0xA,6
-; 0000 00B3 while (PIND & (1 << DHT_PIN));
+; 0000 00B1 while (PIND & (1 << DHT_PIN));
 _0x80:
 	SBIC 0x9,6
 	RJMP _0x80
-; 0000 00B4 while (!(PIND & (1 << DHT_PIN)));
+; 0000 00B2 while (!(PIND & (1 << DHT_PIN)));
 _0x83:
 	SBIS 0x9,6
 	RJMP _0x83
-; 0000 00B5 while (PIND & (1 << DHT_PIN));
+; 0000 00B3 while (PIND & (1 << DHT_PIN));
 _0x86:
 	SBIC 0x9,6
 	RJMP _0x86
-; 0000 00B6 }
+; 0000 00B4 }
 	RET
 ; .FEND
 ;uint8_t dht_receive_data() {
-; 0000 00B8 uint8_t dht_receive_data() {
+; 0000 00B6 uint8_t dht_receive_data() {
 _dht_receive_data:
 ; .FSTART _dht_receive_data
-; 0000 00B9 uint8_t c = 0;
-; 0000 00BA int q;
-; 0000 00BB for (q = 0; q < 8; q++) {
+; 0000 00B7 uint8_t c = 0;
+; 0000 00B8 int q;
+; 0000 00B9 for (q = 0; q < 8; q++) {
 	CALL __SAVELOCR4
 ;	c -> R17
 ;	q -> R18,R19
@@ -2267,77 +2268,77 @@ _dht_receive_data:
 _0x8A:
 	__CPWRN 18,19,8
 	BRGE _0x8B
-; 0000 00BC while (!(PIND & (1 << DHT_PIN)));
+; 0000 00BA while (!(PIND & (1 << DHT_PIN)));
 _0x8C:
 	SBIS 0x9,6
 	RJMP _0x8C
-; 0000 00BD delay_us(30);
+; 0000 00BB delay_us(30);
 	__DELAY_USB 160
-; 0000 00BE if (PIND & (1 << DHT_PIN))
+; 0000 00BC if (PIND & (1 << DHT_PIN))
 	SBIS 0x9,6
 	RJMP _0x8F
-; 0000 00BF c = (c << 1) | 1;
+; 0000 00BD c = (c << 1) | 1;
 	MOV  R30,R17
 	LSL  R30
 	ORI  R30,1
 	MOV  R17,R30
-; 0000 00C0 else
+; 0000 00BE else
 	RJMP _0x90
 _0x8F:
-; 0000 00C1 c = (c << 1);
+; 0000 00BF c = (c << 1);
 	LSL  R17
-; 0000 00C2 while (PIND & (1 << DHT_PIN));
+; 0000 00C0 while (PIND & (1 << DHT_PIN));
 _0x90:
 _0x91:
 	SBIC 0x9,6
 	RJMP _0x91
-; 0000 00C3 }
+; 0000 00C1 }
 	__ADDWRN 18,19,1
 	RJMP _0x8A
 _0x8B:
-; 0000 00C4 return c;
+; 0000 00C2 return c;
 	MOV  R30,R17
 	CALL __LOADLOCR4
 	RJMP _0x2060003
-; 0000 00C5 }
+; 0000 00C3 }
 ; .FEND
 ;unsigned char read_dht11() {
-; 0000 00C7 unsigned char read_dht11() {
+; 0000 00C5 unsigned char read_dht11() {
 _read_dht11:
 ; .FSTART _read_dht11
-; 0000 00C8 dht_request();
+; 0000 00C6 dht_request();
 	RCALL _dht_request
-; 0000 00C9 dht_response();
+; 0000 00C7 dht_response();
 	RCALL _dht_response
-; 0000 00CA 
-; 0000 00CB I_RH = dht_receive_data();
+; 0000 00C8 
+; 0000 00C9 I_RH = dht_receive_data();
 	RCALL _dht_receive_data
 	LDI  R31,0
 	STS  _I_RH,R30
 	STS  _I_RH+1,R31
-; 0000 00CC D_RH = dht_receive_data();
+; 0000 00CA D_RH = dht_receive_data();
 	RCALL _dht_receive_data
 	LDI  R31,0
 	STS  _D_RH,R30
 	STS  _D_RH+1,R31
-; 0000 00CD I_Temp = dht_receive_data();
+; 0000 00CB I_Temp = dht_receive_data();
 	RCALL _dht_receive_data
 	LDI  R31,0
 	STS  _I_Temp,R30
 	STS  _I_Temp+1,R31
-; 0000 00CE D_Temp = dht_receive_data();
+; 0000 00CC D_Temp = dht_receive_data();
 	RCALL _dht_receive_data
 	LDI  R31,0
 	STS  _D_Temp,R30
 	STS  _D_Temp+1,R31
-; 0000 00CF CheckSum = dht_receive_data();
+; 0000 00CD CheckSum = dht_receive_data();
 	RCALL _dht_receive_data
 	LDI  R31,0
 	STS  _CheckSum,R30
 	STS  _CheckSum+1,R31
-; 0000 00D0 
-; 0000 00D1 // Verify checksum
-; 0000 00D2 if ((I_RH + D_RH + I_Temp + D_Temp) == CheckSum) {
+; 0000 00CE 
+; 0000 00CF // Verify checksum
+; 0000 00D0 if ((I_RH + D_RH + I_Temp + D_Temp) == CheckSum) {
 	LDS  R30,_D_RH
 	LDS  R31,_D_RH+1
 	LDS  R26,_I_RH
@@ -2356,31 +2357,31 @@ _read_dht11:
 	CP   R30,R26
 	CPC  R31,R27
 	BRNE _0x94
-; 0000 00D3 dht_error = 0;
+; 0000 00D1 dht_error = 0;
 	CLR  R9
-; 0000 00D4 return 1; // Success
+; 0000 00D2 return 1; // Success
 	LDI  R30,LOW(1)
 	RET
-; 0000 00D5 } else {
+; 0000 00D3 } else {
 _0x94:
-; 0000 00D6 dht_error = 1;
+; 0000 00D4 dht_error = 1;
 	LDI  R30,LOW(1)
 	MOV  R9,R30
-; 0000 00D7 return 0; // Error
+; 0000 00D5 return 0; // Error
 	LDI  R30,LOW(0)
 	RET
-; 0000 00D8 }
-; 0000 00D9 }
+; 0000 00D6 }
+; 0000 00D7 }
 	RET
 ; .FEND
 ;void check_temperature_alert() {
-; 0000 00DC void check_temperature_alert() {
+; 0000 00DA void check_temperature_alert() {
 _check_temperature_alert:
 ; .FSTART _check_temperature_alert
-; 0000 00DD unsigned long current_time = millis();
-; 0000 00DE 
-; 0000 00DF // Check if temperature is above 38°C and no error
-; 0000 00E0 if (!dht_error && I_Temp >= 38) {
+; 0000 00DB unsigned long current_time = millis();
+; 0000 00DC 
+; 0000 00DD // Check if temperature is above 38°C and no error
+; 0000 00DE if (!dht_error && I_Temp >= 38) {
 	CALL SUBOPT_0x7
 ;	current_time -> Y+0
 	TST  R9
@@ -2391,73 +2392,73 @@ _check_temperature_alert:
 _0x97:
 	RJMP _0x96
 _0x98:
-; 0000 00E1 if (!temp_alert_active) {
+; 0000 00DF if (!temp_alert_active) {
 	LDS  R30,_temp_alert_active
 	CPI  R30,0
 	BRNE _0x99
-; 0000 00E2 // Start temperature alert
-; 0000 00E3 temp_alert_active = 1;
+; 0000 00E0 // Start temperature alert
+; 0000 00E1 temp_alert_active = 1;
 	LDI  R30,LOW(1)
 	STS  _temp_alert_active,R30
-; 0000 00E4 temp_alert_start_time = current_time;
+; 0000 00E2 temp_alert_start_time = current_time;
 	CALL SUBOPT_0x6
 	STS  _temp_alert_start_time,R30
 	STS  _temp_alert_start_time+1,R31
 	STS  _temp_alert_start_time+2,R22
 	STS  _temp_alert_start_time+3,R23
-; 0000 00E5 temp_alert_last_toggle = current_time;
+; 0000 00E3 temp_alert_last_toggle = current_time;
 	CALL SUBOPT_0x13
-; 0000 00E6 temp_alert_buzzer_state = 0;
+; 0000 00E4 temp_alert_buzzer_state = 0;
 	LDI  R30,LOW(0)
 	STS  _temp_alert_buzzer_state,R30
-; 0000 00E7 }
-; 0000 00E8 } else {
+; 0000 00E5 }
+; 0000 00E6 } else {
 _0x99:
 	RJMP _0x9A
 _0x96:
-; 0000 00E9 // Temperature is normal or DHT error - stop alert
-; 0000 00EA temp_alert_active = 0;
+; 0000 00E7 // Temperature is normal or DHT error - stop alert
+; 0000 00E8 temp_alert_active = 0;
 	CALL SUBOPT_0x14
-; 0000 00EB if (temp_alert_buzzer_state) {
+; 0000 00E9 if (temp_alert_buzzer_state) {
 	BREQ _0x9B
-; 0000 00EC PORTD &= ~(1 << BUZZER_PIN);  // Turn off buzzer
+; 0000 00EA PORTD &= ~(1 << BUZZER_PIN);  // Turn off buzzer
 	CBI  0xB,2
-; 0000 00ED temp_alert_buzzer_state = 0;
+; 0000 00EB temp_alert_buzzer_state = 0;
 	LDI  R30,LOW(0)
 	STS  _temp_alert_buzzer_state,R30
-; 0000 00EE }
-; 0000 00EF }
+; 0000 00EC }
+; 0000 00ED }
 _0x9B:
 _0x9A:
-; 0000 00F0 
-; 0000 00F1 // Handle temperature alert blinking
-; 0000 00F2 if (temp_alert_active) {
+; 0000 00EE 
+; 0000 00EF // Handle temperature alert blinking
+; 0000 00F0 if (temp_alert_active) {
 	LDS  R30,_temp_alert_active
 	CPI  R30,0
 	BREQ _0x9C
-; 0000 00F3 // Check if 5 seconds have passed
-; 0000 00F4 if (current_time - temp_alert_start_time >= 5000) {
+; 0000 00F1 // Check if 5 seconds have passed
+; 0000 00F2 if (current_time - temp_alert_start_time >= 5000) {
 	CALL SUBOPT_0x15
 	CALL SUBOPT_0x16
 	__CPD1N 0x1388
 	BRLO _0x9D
-; 0000 00F5 // 5 seconds completed - stop alert
-; 0000 00F6 temp_alert_active = 0;
+; 0000 00F3 // 5 seconds completed - stop alert
+; 0000 00F4 temp_alert_active = 0;
 	CALL SUBOPT_0x14
-; 0000 00F7 if (temp_alert_buzzer_state) {
+; 0000 00F5 if (temp_alert_buzzer_state) {
 	BREQ _0x9E
-; 0000 00F8 PORTD &= ~(1 << BUZZER_PIN);
+; 0000 00F6 PORTD &= ~(1 << BUZZER_PIN);
 	CBI  0xB,2
-; 0000 00F9 temp_alert_buzzer_state = 0;
+; 0000 00F7 temp_alert_buzzer_state = 0;
 	LDI  R30,LOW(0)
 	STS  _temp_alert_buzzer_state,R30
-; 0000 00FA }
-; 0000 00FB } else {
+; 0000 00F8 }
+; 0000 00F9 } else {
 _0x9E:
 	RJMP _0x9F
 _0x9D:
-; 0000 00FC // Blink buzzer every 200ms (5Hz frequency)
-; 0000 00FD if (current_time - temp_alert_last_toggle >= 200) {
+; 0000 00FA // Blink buzzer every 200ms (5Hz frequency)
+; 0000 00FB if (current_time - temp_alert_last_toggle >= 200) {
 	LDS  R26,_temp_alert_last_toggle
 	LDS  R27,_temp_alert_last_toggle+1
 	LDS  R24,_temp_alert_last_toggle+2
@@ -2465,77 +2466,77 @@ _0x9D:
 	CALL SUBOPT_0x16
 	CALL SUBOPT_0x17
 	BRLO _0xA0
-; 0000 00FE temp_alert_buzzer_state = !temp_alert_buzzer_state;
+; 0000 00FC temp_alert_buzzer_state = !temp_alert_buzzer_state;
 	LDS  R30,_temp_alert_buzzer_state
 	CALL __LNEGB1
 	STS  _temp_alert_buzzer_state,R30
-; 0000 00FF temp_alert_last_toggle = current_time;
+; 0000 00FD temp_alert_last_toggle = current_time;
 	CALL SUBOPT_0x13
-; 0000 0100 
-; 0000 0101 if (temp_alert_buzzer_state) {
+; 0000 00FE 
+; 0000 00FF if (temp_alert_buzzer_state) {
 	LDS  R30,_temp_alert_buzzer_state
 	CPI  R30,0
 	BREQ _0xA1
-; 0000 0102 PORTD |= (1 << BUZZER_PIN);   // Buzzer on
+; 0000 0100 PORTD |= (1 << BUZZER_PIN);   // Buzzer on
 	SBI  0xB,2
-; 0000 0103 } else {
+; 0000 0101 } else {
 	RJMP _0xA2
 _0xA1:
-; 0000 0104 PORTD &= ~(1 << BUZZER_PIN);  // Buzzer off
+; 0000 0102 PORTD &= ~(1 << BUZZER_PIN);  // Buzzer off
 	CBI  0xB,2
-; 0000 0105 }
+; 0000 0103 }
 _0xA2:
-; 0000 0106 }
-; 0000 0107 }
+; 0000 0104 }
+; 0000 0105 }
 _0xA0:
 _0x9F:
-; 0000 0108 }
-; 0000 0109 }
+; 0000 0106 }
+; 0000 0107 }
 _0x9C:
 	RJMP _0x2060003
 ; .FEND
 ;void set_led(unsigned char state) {
-; 0000 010C void set_led(unsigned char state) {
+; 0000 010A void set_led(unsigned char state) {
 _set_led:
 ; .FSTART _set_led
-; 0000 010D led_state = state;
+; 0000 010B led_state = state;
 	ST   -Y,R17
 	MOV  R17,R26
 ;	state -> R17
 	STS  _led_state,R17
-; 0000 010E if (led_state) {
+; 0000 010C if (led_state) {
 	LDS  R30,_led_state
 	CPI  R30,0
 	BREQ _0xA3
-; 0000 010F PORTD |= (1 << LED_PIN);
+; 0000 010D PORTD |= (1 << LED_PIN);
 	SBI  0xB,5
-; 0000 0110 } else {
+; 0000 010E } else {
 	RJMP _0xA4
 _0xA3:
-; 0000 0111 PORTD &= ~(1 << LED_PIN);
+; 0000 010F PORTD &= ~(1 << LED_PIN);
 	CBI  0xB,5
-; 0000 0112 }
+; 0000 0110 }
 _0xA4:
-; 0000 0113 }
+; 0000 0111 }
 _0x2060004:
 	LD   R17,Y+
 	RET
 ; .FEND
 ;void handle_clap_switch() {
-; 0000 0115 void handle_clap_switch() {
+; 0000 0113 void handle_clap_switch() {
 _handle_clap_switch:
 ; .FSTART _handle_clap_switch
-; 0000 0116 unsigned long current_time;
-; 0000 0117 unsigned char current_sound;
-; 0000 0118 
-; 0000 0119 current_time = millis();
+; 0000 0114 unsigned long current_time;
+; 0000 0115 unsigned char current_sound;
+; 0000 0116 
+; 0000 0117 current_time = millis();
 	SBIW R28,4
 	ST   -Y,R17
 ;	current_time -> Y+1
 ;	current_sound -> R17
 	RCALL _millis
 	__PUTD1S 1
-; 0000 011A current_sound = (PINC & (1 << SOUND_SENSOR_PIN)) ? 1 : 0;
+; 0000 0118 current_sound = (PINC & (1 << SOUND_SENSOR_PIN)) ? 1 : 0;
 	SBIS 0x6,3
 	RJMP _0xA5
 	LDI  R30,LOW(1)
@@ -2544,9 +2545,9 @@ _0xA5:
 	LDI  R30,LOW(0)
 _0xA6:
 	MOV  R17,R30
-; 0000 011B 
-; 0000 011C // Detect falling edge (HIGH -> LOW) = sound detected
-; 0000 011D if (last_sound_state == 1 && current_sound == 0) {
+; 0000 0119 
+; 0000 011A // Detect falling edge (HIGH -> LOW) = sound detected
+; 0000 011B if (last_sound_state == 1 && current_sound == 0) {
 	LDS  R26,_last_sound_state
 	CPI  R26,LOW(0x1)
 	BRNE _0xA9
@@ -2555,24 +2556,24 @@ _0xA6:
 _0xA9:
 	RJMP _0xA8
 _0xAA:
-; 0000 011E if (!waiting_for_second_clap) {
+; 0000 011C if (!waiting_for_second_clap) {
 	LDS  R30,_waiting_for_second_clap
 	CPI  R30,0
 	BRNE _0xAB
-; 0000 011F // First clap
-; 0000 0120 waiting_for_second_clap = 1;
+; 0000 011D // First clap
+; 0000 011E waiting_for_second_clap = 1;
 	LDI  R30,LOW(1)
 	STS  _waiting_for_second_clap,R30
-; 0000 0121 clap_timer = current_time;
+; 0000 011F clap_timer = current_time;
 	CALL SUBOPT_0x18
 	STS  _clap_timer,R30
 	STS  _clap_timer+1,R31
 	STS  _clap_timer+2,R22
 	STS  _clap_timer+3,R23
-; 0000 0122 clap_count = 1;
+; 0000 0120 clap_count = 1;
 	LDI  R30,LOW(1)
 	STS  _clap_count,R30
-; 0000 0123 } else if (current_time - clap_timer > 30 && current_time - clap_timer < 200) {
+; 0000 0121 } else if (current_time - clap_timer > 30 && current_time - clap_timer < 200) {
 	RJMP _0xAC
 _0xAB:
 	CALL SUBOPT_0x19
@@ -2583,28 +2584,28 @@ _0xAB:
 _0xAE:
 	RJMP _0xAD
 _0xAF:
-; 0000 0124 // Second clap (within 30ms - 200ms) - very fast
-; 0000 0125 clap_count = 2;
+; 0000 0122 // Second clap (within 30ms - 200ms) - very fast
+; 0000 0123 clap_count = 2;
 	LDI  R30,LOW(2)
 	STS  _clap_count,R30
-; 0000 0126 // Toggle LED immediately
-; 0000 0127 set_led(!led_state);
+; 0000 0124 // Toggle LED immediately
+; 0000 0125 set_led(!led_state);
 	LDS  R30,_led_state
 	CALL __LNEGB1
 	MOV  R26,R30
 	RCALL _set_led
-; 0000 0128 // Reset state
-; 0000 0129 waiting_for_second_clap = 0;
+; 0000 0126 // Reset state
+; 0000 0127 waiting_for_second_clap = 0;
 	CALL SUBOPT_0x1A
-; 0000 012A clap_count = 0;
-; 0000 012B clap_timer = 0;
-; 0000 012C }
-; 0000 012D }
+; 0000 0128 clap_count = 0;
+; 0000 0129 clap_timer = 0;
+; 0000 012A }
+; 0000 012B }
 _0xAD:
 _0xAC:
-; 0000 012E 
-; 0000 012F // Timeout - reset if no second clap within 200ms
-; 0000 0130 if (waiting_for_second_clap && (current_time - clap_timer > 200)) {
+; 0000 012C 
+; 0000 012D // Timeout - reset if no second clap within 200ms
+; 0000 012E if (waiting_for_second_clap && (current_time - clap_timer > 200)) {
 _0xA8:
 	LDS  R30,_waiting_for_second_clap
 	CPI  R30,0
@@ -2615,33 +2616,33 @@ _0xA8:
 _0xB1:
 	RJMP _0xB0
 _0xB2:
-; 0000 0131 waiting_for_second_clap = 0;
+; 0000 012F waiting_for_second_clap = 0;
 	CALL SUBOPT_0x1A
-; 0000 0132 clap_count = 0;
-; 0000 0133 clap_timer = 0;
-; 0000 0134 }
-; 0000 0135 
-; 0000 0136 last_sound_state = current_sound;
+; 0000 0130 clap_count = 0;
+; 0000 0131 clap_timer = 0;
+; 0000 0132 }
+; 0000 0133 
+; 0000 0134 last_sound_state = current_sound;
 _0xB0:
 	STS  _last_sound_state,R17
-; 0000 0137 }
+; 0000 0135 }
 	LDD  R17,Y+0
 	ADIW R28,5
 	RET
 ; .FEND
 ;void update_display() {
-; 0000 013A void update_display() {
+; 0000 0138 void update_display() {
 _update_display:
 ; .FSTART _update_display
-; 0000 013B // Declare all variables at the beginning
-; 0000 013C unsigned long current_millis;
-; 0000 013D unsigned long uptime_seconds_long;
-; 0000 013E unsigned int uptime_seconds;
-; 0000 013F unsigned int deciseconds;
-; 0000 0140 unsigned int raw_counter;
-; 0000 0141 char uptime_formatted[16];
-; 0000 0142 
-; 0000 0143 ssd1306_clear();
+; 0000 0139 // Declare all variables at the beginning
+; 0000 013A unsigned long current_millis;
+; 0000 013B unsigned long uptime_seconds_long;
+; 0000 013C unsigned int uptime_seconds;
+; 0000 013D unsigned int deciseconds;
+; 0000 013E unsigned int raw_counter;
+; 0000 013F char uptime_formatted[16];
+; 0000 0140 
+; 0000 0141 ssd1306_clear();
 	SBIW R28,24
 	CALL __SAVELOCR6
 ;	current_millis -> Y+26
@@ -2651,25 +2652,25 @@ _update_display:
 ;	raw_counter -> R20,R21
 ;	uptime_formatted -> Y+6
 	CALL SUBOPT_0x1B
-; 0000 0144 
-; 0000 0145 // Title
-; 0000 0146 ssd1306_set_cursor(0, 0);
+; 0000 0142 
+; 0000 0143 // Title
+; 0000 0144 ssd1306_set_cursor(0, 0);
 	LDI  R26,LOW(0)
 	LDI  R27,0
 	RCALL _ssd1306_set_cursor
-; 0000 0147 ssd1306_print("Smart Garden v2.1");
+; 0000 0145 ssd1306_print("Smart Garden v2.1");
 	__POINTW2MN _0xB3,0
 	RCALL _ssd1306_print
-; 0000 0148 
-; 0000 0149 // DHT11 data with temperature alert indicator
-; 0000 014A if (!dht_error) {
+; 0000 0146 
+; 0000 0147 // DHT11 data with temperature alert indicator
+; 0000 0148 if (!dht_error) {
 	TST  R9
 	BREQ PC+2
 	RJMP _0xB4
-; 0000 014B ssd1306_set_cursor(0, 2);
+; 0000 0149 ssd1306_set_cursor(0, 2);
 	CALL SUBOPT_0x3
 	CALL SUBOPT_0x1C
-; 0000 014C if (temp_alert_active && I_Temp >= 38) {
+; 0000 014A if (temp_alert_active && I_Temp >= 38) {
 	LDS  R30,_temp_alert_active
 	CPI  R30,0
 	BREQ _0xB6
@@ -2679,13 +2680,13 @@ _update_display:
 _0xB6:
 	RJMP _0xB5
 _0xB7:
-; 0000 014D sprintf(display_buffer, "Temp : %d.%d C !HOT!", I_Temp, D_Temp);
+; 0000 014B sprintf(display_buffer, "Temp : %d.%d C !HOT!", I_Temp, D_Temp);
 	CALL SUBOPT_0x1D
 	__POINTW1FN _0x0,131
 	RJMP _0xDD
-; 0000 014E } else {
+; 0000 014C } else {
 _0xB5:
-; 0000 014F sprintf(display_buffer, "Temp : %d.%d C", I_Temp, D_Temp);
+; 0000 014D sprintf(display_buffer, "Temp : %d.%d C", I_Temp, D_Temp);
 	CALL SUBOPT_0x1D
 	__POINTW1FN _0x0,152
 _0xDD:
@@ -2698,17 +2699,17 @@ _0xDD:
 	LDS  R31,_D_Temp+1
 	CALL SUBOPT_0xE
 	CALL SUBOPT_0x10
-; 0000 0150 }
-; 0000 0151 ssd1306_print(display_buffer);
+; 0000 014E }
+; 0000 014F ssd1306_print(display_buffer);
 	LDI  R26,LOW(_display_buffer)
 	LDI  R27,HIGH(_display_buffer)
 	CALL SUBOPT_0x1E
-; 0000 0152 
-; 0000 0153 ssd1306_set_cursor(0, 3);
+; 0000 0150 
+; 0000 0151 ssd1306_set_cursor(0, 3);
 	LDI  R26,LOW(3)
 	LDI  R27,0
 	RCALL _ssd1306_set_cursor
-; 0000 0154 sprintf(display_buffer, "Hum  : %d.%d %%", I_RH, D_RH);
+; 0000 0152 sprintf(display_buffer, "Hum  : %d.%d %%", I_RH, D_RH);
 	CALL SUBOPT_0x1D
 	__POINTW1FN _0x0,167
 	ST   -Y,R31
@@ -2720,74 +2721,74 @@ _0xDD:
 	LDS  R31,_D_RH+1
 	CALL SUBOPT_0xE
 	CALL SUBOPT_0x10
-; 0000 0155 ssd1306_print(display_buffer);
+; 0000 0153 ssd1306_print(display_buffer);
 	LDI  R26,LOW(_display_buffer)
 	LDI  R27,HIGH(_display_buffer)
 	RJMP _0xDE
-; 0000 0156 } else {
+; 0000 0154 } else {
 _0xB4:
-; 0000 0157 ssd1306_set_cursor(0, 2);
+; 0000 0155 ssd1306_set_cursor(0, 2);
 	CALL SUBOPT_0x3
 	CALL SUBOPT_0x1C
-; 0000 0158 ssd1306_print("DHT11: Error");
+; 0000 0156 ssd1306_print("DHT11: Error");
 	__POINTW2MN _0xB3,18
 _0xDE:
 	RCALL _ssd1306_print
-; 0000 0159 }
-; 0000 015A 
-; 0000 015B // Gate status
-; 0000 015C ssd1306_set_cursor(0, 5);
+; 0000 0157 }
+; 0000 0158 
+; 0000 0159 // Gate status
+; 0000 015A ssd1306_set_cursor(0, 5);
 	CALL SUBOPT_0x3
 	CALL SUBOPT_0x1F
-; 0000 015D if (hasObstacle) {
+; 0000 015B if (hasObstacle) {
 	LDS  R30,_hasObstacle
 	CPI  R30,0
 	BREQ _0xBA
-; 0000 015E ssd1306_print("Gate: OPEN");
+; 0000 015C ssd1306_print("Gate: OPEN");
 	__POINTW2MN _0xB3,31
 	RJMP _0xDF
-; 0000 015F } else {
+; 0000 015D } else {
 _0xBA:
-; 0000 0160 ssd1306_print("Gate: CLOSE");
+; 0000 015E ssd1306_print("Gate: CLOSE");
 	__POINTW2MN _0xB3,42
 _0xDF:
 	RCALL _ssd1306_print
-; 0000 0161 }
-; 0000 0162 
-; 0000 0163 // LED status
-; 0000 0164 ssd1306_set_cursor(0, 6);
+; 0000 015F }
+; 0000 0160 
+; 0000 0161 // LED status
+; 0000 0162 ssd1306_set_cursor(0, 6);
 	CALL SUBOPT_0x3
 	LDI  R26,LOW(6)
 	LDI  R27,0
 	RCALL _ssd1306_set_cursor
-; 0000 0165 if (led_state) {
+; 0000 0163 if (led_state) {
 	LDS  R30,_led_state
 	CPI  R30,0
 	BREQ _0xBC
-; 0000 0166 ssd1306_print("LED: ON");
+; 0000 0164 ssd1306_print("LED: ON");
 	__POINTW2MN _0xB3,54
 	RJMP _0xE0
-; 0000 0167 } else {
+; 0000 0165 } else {
 _0xBC:
-; 0000 0168 ssd1306_print("LED: OFF");
+; 0000 0166 ssd1306_print("LED: OFF");
 	__POINTW2MN _0xB3,62
 _0xE0:
 	RCALL _ssd1306_print
-; 0000 0169 }
-; 0000 016A 
-; 0000 016B // Temperature alert status
-; 0000 016C ssd1306_set_cursor(68, 5);
+; 0000 0167 }
+; 0000 0168 
+; 0000 0169 // Temperature alert status
+; 0000 016A ssd1306_set_cursor(68, 5);
 	LDI  R30,LOW(68)
 	LDI  R31,HIGH(68)
 	ST   -Y,R31
 	ST   -Y,R30
 	CALL SUBOPT_0x1F
-; 0000 016D if (temp_alert_active) {
+; 0000 016B if (temp_alert_active) {
 	LDS  R30,_temp_alert_active
 	CPI  R30,0
 	BREQ _0xBE
-; 0000 016E unsigned long remaining = 5000 - (millis() - temp_alert_start_time);
-; 0000 016F sprintf(display_buffer, "ALERT:%us", (unsigned int)(remaining/1000 + 1));
+; 0000 016C unsigned long remaining = 5000 - (millis() - temp_alert_start_time);
+; 0000 016D sprintf(display_buffer, "ALERT:%us", (unsigned int)(remaining/1000 + 1));
 	SBIW R28,4
 ;	current_millis -> Y+30
 ;	uptime_seconds_long -> Y+26
@@ -2812,15 +2813,15 @@ _0xE0:
 	CLR  R22
 	CLR  R23
 	CALL SUBOPT_0x20
-; 0000 0170 ssd1306_print(display_buffer);
+; 0000 016E ssd1306_print(display_buffer);
 	LDI  R26,LOW(_display_buffer)
 	LDI  R27,HIGH(_display_buffer)
 	RCALL _ssd1306_print
-; 0000 0171 }
+; 0000 016F }
 	ADIW R28,4
-; 0000 0172 
-; 0000 0173 // Clap debug info (can be removed after testing)
-; 0000 0174 ssd1306_set_cursor(64, 6);
+; 0000 0170 
+; 0000 0171 // Clap debug info (can be removed after testing)
+; 0000 0172 ssd1306_set_cursor(64, 6);
 _0xBE:
 	LDI  R30,LOW(64)
 	LDI  R31,HIGH(64)
@@ -2829,16 +2830,16 @@ _0xBE:
 	LDI  R26,LOW(6)
 	LDI  R27,0
 	RCALL _ssd1306_set_cursor
-; 0000 0175 if (waiting_for_second_clap) {
+; 0000 0173 if (waiting_for_second_clap) {
 	LDS  R30,_waiting_for_second_clap
 	CPI  R30,0
 	BREQ _0xBF
-; 0000 0176 ssd1306_print("Wait2nd");
+; 0000 0174 ssd1306_print("Wait2nd");
 	__POINTW2MN _0xB3,71
 	RJMP _0xE1
-; 0000 0177 } else {
+; 0000 0175 } else {
 _0xBF:
-; 0000 0178 sprintf(display_buffer, "C:%d", clap_count);
+; 0000 0176 sprintf(display_buffer, "C:%d", clap_count);
 	CALL SUBOPT_0x1D
 	__POINTW1FN _0x0,254
 	ST   -Y,R31
@@ -2848,29 +2849,29 @@ _0xBF:
 	CLR  R22
 	CLR  R23
 	CALL SUBOPT_0x20
-; 0000 0179 ssd1306_print(display_buffer);
+; 0000 0177 ssd1306_print(display_buffer);
 	LDI  R26,LOW(_display_buffer)
 	LDI  R27,HIGH(_display_buffer)
 _0xE1:
 	RCALL _ssd1306_print
-; 0000 017A }
-; 0000 017B 
-; 0000 017C // System uptime - ENHANCED with human readable format
-; 0000 017D ssd1306_set_cursor(0, 7);
+; 0000 0178 }
+; 0000 0179 
+; 0000 017A // System uptime - ENHANCED with human readable format
+; 0000 017B ssd1306_set_cursor(0, 7);
 	CALL SUBOPT_0x3
 	LDI  R26,LOW(7)
 	LDI  R27,0
 	RCALL _ssd1306_set_cursor
-; 0000 017E 
-; 0000 017F // Get current values
-; 0000 0180 current_millis = millis();
+; 0000 017C 
+; 0000 017D // Get current values
+; 0000 017E current_millis = millis();
 	RCALL _millis
 	__PUTD1S 26
-; 0000 0181 uptime_seconds = get_uptime_seconds();
+; 0000 017F uptime_seconds = get_uptime_seconds();
 	RCALL _get_uptime_seconds
 	MOVW R16,R30
-; 0000 0182 
-; 0000 0183 if (current_millis > 0 && uptime_seconds > 0) {
+; 0000 0180 
+; 0000 0181 if (current_millis > 0 && uptime_seconds > 0) {
 	CALL SUBOPT_0x21
 	BRSH _0xC2
 	CLR  R0
@@ -2880,20 +2881,20 @@ _0xE1:
 _0xC2:
 	RJMP _0xC1
 _0xC3:
-; 0000 0184 // Format uptime in human readable format
-; 0000 0185 uptime_seconds_long = (unsigned long)uptime_seconds;
+; 0000 0182 // Format uptime in human readable format
+; 0000 0183 uptime_seconds_long = (unsigned long)uptime_seconds;
 	MOVW R30,R16
 	CLR  R22
 	CLR  R23
 	__PUTD1S 22
-; 0000 0186 format_uptime(uptime_formatted, uptime_seconds_long);
+; 0000 0184 format_uptime(uptime_formatted, uptime_seconds_long);
 	MOVW R30,R28
 	ADIW R30,6
 	ST   -Y,R31
 	ST   -Y,R30
 	__GETD2S 24
 	RCALL _format_uptime
-; 0000 0187 sprintf(display_buffer, "Up:%s", uptime_formatted);
+; 0000 0185 sprintf(display_buffer, "Up:%s", uptime_formatted);
 	CALL SUBOPT_0x1D
 	__POINTW1FN _0x0,259
 	ST   -Y,R31
@@ -2901,18 +2902,18 @@ _0xC3:
 	MOVW R30,R28
 	ADIW R30,10
 	RJMP _0xE2
-; 0000 0188 ssd1306_print(display_buffer);
-; 0000 0189 } else if (current_millis > 0) {
+; 0000 0186 ssd1306_print(display_buffer);
+; 0000 0187 } else if (current_millis > 0) {
 _0xC1:
 	CALL SUBOPT_0x21
 	BRSH _0xC5
-; 0000 018A // Fallback 1: Show milliseconds/100
-; 0000 018B deciseconds = (unsigned int)(current_millis / 100UL);
+; 0000 0188 // Fallback 1: Show milliseconds/100
+; 0000 0189 deciseconds = (unsigned int)(current_millis / 100UL);
 	__GETD2S 26
 	__GETD1N 0x64
 	CALL __DIVD21U
 	MOVW R18,R30
-; 0000 018C sprintf(display_buffer, "Up: %u.%us", deciseconds/10, deciseconds%10);
+; 0000 018A sprintf(display_buffer, "Up: %u.%us", deciseconds/10, deciseconds%10);
 	CALL SUBOPT_0x1D
 	__POINTW1FN _0x0,265
 	ST   -Y,R31
@@ -2928,20 +2929,20 @@ _0xC1:
 	CALL __MODW21U
 	CALL SUBOPT_0xE
 	CALL SUBOPT_0x10
-; 0000 018D ssd1306_print(display_buffer);
+; 0000 018B ssd1306_print(display_buffer);
 	RJMP _0xE3
-; 0000 018E } else {
+; 0000 018C } else {
 _0xC5:
-; 0000 018F // Fallback 2: Show raw counter
-; 0000 0190 #asm("cli");
+; 0000 018D // Fallback 2: Show raw counter
+; 0000 018E #asm("cli");
 	CLI
-; 0000 0191 raw_counter = (unsigned int)(millis_counter & 0xFFFF);
+; 0000 018F raw_counter = (unsigned int)(millis_counter & 0xFFFF);
 	LDS  R30,_millis_counter
 	LDS  R31,_millis_counter+1
 	MOVW R20,R30
-; 0000 0192 #asm("sei");
+; 0000 0190 #asm("sei");
 	SEI
-; 0000 0193 sprintf(display_buffer, "Cnt: %u", raw_counter);
+; 0000 0191 sprintf(display_buffer, "Cnt: %u", raw_counter);
 	CALL SUBOPT_0x1D
 	__POINTW1FN _0x0,276
 	ST   -Y,R31
@@ -2951,16 +2952,16 @@ _0xE2:
 	CLR  R22
 	CLR  R23
 	CALL SUBOPT_0x20
-; 0000 0194 ssd1306_print(display_buffer);
+; 0000 0192 ssd1306_print(display_buffer);
 _0xE3:
 	LDI  R26,LOW(_display_buffer)
 	LDI  R27,HIGH(_display_buffer)
 	RCALL _ssd1306_print
-; 0000 0195 }
-; 0000 0196 
-; 0000 0197 ssd1306_display();
+; 0000 0193 }
+; 0000 0194 
+; 0000 0195 ssd1306_display();
 	RCALL _ssd1306_display
-; 0000 0198 }
+; 0000 0196 }
 	CALL __LOADLOCR6
 	ADIW R28,30
 	RET
@@ -2970,20 +2971,20 @@ _0xE3:
 _0xB3:
 	.BYTE 0x4F
 ;void debug_timer() {
-; 0000 019B void debug_timer() {
+; 0000 0199 void debug_timer() {
 
 	.CSEG
 _debug_timer:
 ; .FSTART _debug_timer
-; 0000 019C unsigned long current_time;
-; 0000 019D static unsigned char debug_led = 0;
-; 0000 019E 
-; 0000 019F current_time = millis();
+; 0000 019A unsigned long current_time;
+; 0000 019B static unsigned char debug_led = 0;
+; 0000 019C 
+; 0000 019D current_time = millis();
 	CALL SUBOPT_0x7
 ;	current_time -> Y+0
-; 0000 01A0 
-; 0000 01A1 // Update debug seconds counter
-; 0000 01A2 if (current_time - debug_last_second >= 1000) {
+; 0000 019E 
+; 0000 019F // Update debug seconds counter
+; 0000 01A0 if (current_time - debug_last_second >= 1000) {
 	LDS  R26,_debug_last_second
 	LDS  R27,_debug_last_second+1
 	LDS  R24,_debug_last_second+2
@@ -2991,231 +2992,231 @@ _debug_timer:
 	CALL SUBOPT_0x16
 	__CPD1N 0x3E8
 	BRLO _0xC7
-; 0000 01A3 debug_seconds++;
+; 0000 01A1 debug_seconds++;
 	LDI  R26,LOW(_debug_seconds)
 	LDI  R27,HIGH(_debug_seconds)
 	CALL SUBOPT_0x2
-; 0000 01A4 debug_last_second = current_time;
+; 0000 01A2 debug_last_second = current_time;
 	CALL SUBOPT_0x6
 	STS  _debug_last_second,R30
 	STS  _debug_last_second+1,R31
 	STS  _debug_last_second+2,R22
 	STS  _debug_last_second+3,R23
-; 0000 01A5 
-; 0000 01A6 // Blink built-in LED every second for visual confirmation
-; 0000 01A7 debug_led = !debug_led;
+; 0000 01A3 
+; 0000 01A4 // Blink built-in LED every second for visual confirmation
+; 0000 01A5 debug_led = !debug_led;
 	LDS  R30,_debug_led_S000002A000
 	CALL __LNEGB1
 	STS  _debug_led_S000002A000,R30
-; 0000 01A8 if (debug_led) {
+; 0000 01A6 if (debug_led) {
 	CPI  R30,0
 	BREQ _0xC8
-; 0000 01A9 PORTB |= (1 << 5);  // Arduino pin 13
+; 0000 01A7 PORTB |= (1 << 5);  // Arduino pin 13
 	SBI  0x5,5
-; 0000 01AA } else {
+; 0000 01A8 } else {
 	RJMP _0xC9
 _0xC8:
-; 0000 01AB PORTB &= ~(1 << 5);
+; 0000 01A9 PORTB &= ~(1 << 5);
 	CBI  0x5,5
-; 0000 01AC }
+; 0000 01AA }
 _0xC9:
-; 0000 01AD }
-; 0000 01AE }
+; 0000 01AB }
+; 0000 01AC }
 _0xC7:
 _0x2060003:
 	ADIW R28,4
 	RET
 ; .FEND
 ;void system_init() {
-; 0000 01B1 void system_init() {
+; 0000 01AF void system_init() {
 _system_init:
 ; .FSTART _system_init
-; 0000 01B2 int i;
-; 0000 01B3 
-; 0000 01B4 // Configure debug LED (pin 13)
-; 0000 01B5 DDRB |= (1 << 5);
+; 0000 01B0 int i;
+; 0000 01B1 
+; 0000 01B2 // Configure debug LED (pin 13)
+; 0000 01B3 DDRB |= (1 << 5);
 	ST   -Y,R17
 	ST   -Y,R16
 ;	i -> R16,R17
 	SBI  0x4,5
-; 0000 01B6 PORTB &= ~(1 << 5);
+; 0000 01B4 PORTB &= ~(1 << 5);
 	CBI  0x5,5
-; 0000 01B7 
-; 0000 01B8 // Initialize OLED
-; 0000 01B9 SSD1306_Init();
+; 0000 01B5 
+; 0000 01B6 // Initialize OLED
+; 0000 01B7 SSD1306_Init();
 	RCALL _SSD1306_Init
-; 0000 01BA ssd1306_clear();
+; 0000 01B8 ssd1306_clear();
 	CALL SUBOPT_0x1B
-; 0000 01BB 
-; 0000 01BC // Show startup message
-; 0000 01BD ssd1306_set_cursor(0, 2);
+; 0000 01B9 
+; 0000 01BA // Show startup message
+; 0000 01BB ssd1306_set_cursor(0, 2);
 	CALL SUBOPT_0x1C
-; 0000 01BE ssd1306_print("Initializing...");
+; 0000 01BC ssd1306_print("Initializing...");
 	__POINTW2MN _0xCA,0
 	CALL SUBOPT_0x1E
-; 0000 01BF ssd1306_set_cursor(0, 4);
+; 0000 01BD ssd1306_set_cursor(0, 4);
 	LDI  R26,LOW(4)
 	LDI  R27,0
 	RCALL _ssd1306_set_cursor
-; 0000 01C0 ssd1306_print("Anh va Hoi design");
+; 0000 01BE ssd1306_print("Anh va Hoi design");
 	__POINTW2MN _0xCA,16
 	RCALL _ssd1306_print
-; 0000 01C1 ssd1306_display();
+; 0000 01BF ssd1306_display();
 	RCALL _ssd1306_display
-; 0000 01C2 delay_ms(2000);
+; 0000 01C0 delay_ms(2000);
 	LDI  R26,LOW(2000)
 	LDI  R27,HIGH(2000)
 	CALL _delay_ms
-; 0000 01C3 
-; 0000 01C4 // Initialize timer FIRST - IMPORTANT
-; 0000 01C5 timer0_init();
+; 0000 01C1 
+; 0000 01C2 // Initialize timer FIRST - IMPORTANT
+; 0000 01C3 timer0_init();
 	RCALL _timer0_init
-; 0000 01C6 
-; 0000 01C7 // Initialize servo
-; 0000 01C8 servo_setup();
+; 0000 01C4 
+; 0000 01C5 // Initialize servo
+; 0000 01C6 servo_setup();
 	RCALL _servo_setup
-; 0000 01C9 close_gate();
+; 0000 01C7 close_gate();
 	RCALL _close_gate
-; 0000 01CA 
-; 0000 01CB // Configure pins
-; 0000 01CC // Gate control pins
-; 0000 01CD DDRC &= ~(1 << FC51_PIN);    // FC51 input
+; 0000 01C8 
+; 0000 01C9 // Configure pins
+; 0000 01CA // Gate control pins
+; 0000 01CB DDRC &= ~(1 << FC51_PIN);    // FC51 input
 	CBI  0x7,1
-; 0000 01CE PORTC |= (1 << FC51_PIN);    // Pull-up
+; 0000 01CC PORTC |= (1 << FC51_PIN);    // Pull-up
 	SBI  0x8,1
-; 0000 01CF DDRD |= (1 << BUZZER_PIN);   // Buzzer output
+; 0000 01CD DDRD |= (1 << BUZZER_PIN);   // Buzzer output
 	SBI  0xA,2
-; 0000 01D0 PORTD &= ~(1 << BUZZER_PIN); // Buzzer off
+; 0000 01CE PORTD &= ~(1 << BUZZER_PIN); // Buzzer off
 	CBI  0xB,2
-; 0000 01D1 
-; 0000 01D2 // Clap switch pins
-; 0000 01D3 DDRD |= (1 << LED_PIN);      // LED output
+; 0000 01CF 
+; 0000 01D0 // Clap switch pins
+; 0000 01D1 DDRD |= (1 << LED_PIN);      // LED output
 	SBI  0xA,5
-; 0000 01D4 PORTD &= ~(1 << LED_PIN);    // LED off
+; 0000 01D2 PORTD &= ~(1 << LED_PIN);    // LED off
 	CBI  0xB,5
-; 0000 01D5 DDRC &= ~(1 << SOUND_SENSOR_PIN); // Sound sensor input
+; 0000 01D3 DDRC &= ~(1 << SOUND_SENSOR_PIN); // Sound sensor input
 	CBI  0x7,3
-; 0000 01D6 PORTC |= (1 << SOUND_SENSOR_PIN); // Pull-up
+; 0000 01D4 PORTC |= (1 << SOUND_SENSOR_PIN); // Pull-up
 	SBI  0x8,3
-; 0000 01D7 
-; 0000 01D8 // Startup LED sequence
-; 0000 01D9 for (i = 0; i < 3; i++) {
+; 0000 01D5 
+; 0000 01D6 // Startup LED sequence
+; 0000 01D7 for (i = 0; i < 3; i++) {
 	__GETWRN 16,17,0
 _0xCC:
 	__CPWRN 16,17,3
 	BRGE _0xCD
-; 0000 01DA PORTD |= (1 << LED_PIN);
+; 0000 01D8 PORTD |= (1 << LED_PIN);
 	SBI  0xB,5
+; 0000 01D9 delay_ms(200);
+	CALL SUBOPT_0x22
+; 0000 01DA PORTD &= ~(1 << LED_PIN);
+	CBI  0xB,5
 ; 0000 01DB delay_ms(200);
 	CALL SUBOPT_0x22
-; 0000 01DC PORTD &= ~(1 << LED_PIN);
-	CBI  0xB,5
-; 0000 01DD delay_ms(200);
-	CALL SUBOPT_0x22
-; 0000 01DE }
+; 0000 01DC }
 	__ADDWRN 16,17,1
 	RJMP _0xCC
 _0xCD:
-; 0000 01DF 
-; 0000 01E0 // Initialize variables
-; 0000 01E1 led_state = 0;
+; 0000 01DD 
+; 0000 01DE // Initialize variables
+; 0000 01DF led_state = 0;
 	LDI  R30,LOW(0)
 	STS  _led_state,R30
-; 0000 01E2 sound_detected = 0;
+; 0000 01E0 sound_detected = 0;
 	STS  _sound_detected,R30
-; 0000 01E3 last_sound_state = 1;
+; 0000 01E1 last_sound_state = 1;
 	LDI  R30,LOW(1)
 	STS  _last_sound_state,R30
-; 0000 01E4 clap_timer = 0;
+; 0000 01E2 clap_timer = 0;
 	LDI  R30,LOW(0)
 	STS  _clap_timer,R30
 	STS  _clap_timer+1,R30
 	STS  _clap_timer+2,R30
 	STS  _clap_timer+3,R30
-; 0000 01E5 clap_count = 0;
+; 0000 01E3 clap_count = 0;
 	STS  _clap_count,R30
-; 0000 01E6 waiting_for_second_clap = 0;
+; 0000 01E4 waiting_for_second_clap = 0;
 	STS  _waiting_for_second_clap,R30
-; 0000 01E7 hasObstacle = 0;
+; 0000 01E5 hasObstacle = 0;
 	STS  _hasObstacle,R30
-; 0000 01E8 past_obstacle = 0;
+; 0000 01E6 past_obstacle = 0;
 	STS  _past_obstacle,R30
-; 0000 01E9 last_dht_read = 0;
+; 0000 01E7 last_dht_read = 0;
 	STS  _last_dht_read,R30
 	STS  _last_dht_read+1,R30
 	STS  _last_dht_read+2,R30
 	STS  _last_dht_read+3,R30
-; 0000 01EA last_display_update = 0;
+; 0000 01E8 last_display_update = 0;
 	STS  _last_display_update,R30
 	STS  _last_display_update+1,R30
 	STS  _last_display_update+2,R30
 	STS  _last_display_update+3,R30
-; 0000 01EB debug_seconds = 0;
+; 0000 01E9 debug_seconds = 0;
 	STS  _debug_seconds,R30
 	STS  _debug_seconds+1,R30
-; 0000 01EC debug_last_second = 0;
+; 0000 01EA debug_last_second = 0;
 	STS  _debug_last_second,R30
 	STS  _debug_last_second+1,R30
 	STS  _debug_last_second+2,R30
 	STS  _debug_last_second+3,R30
-; 0000 01ED 
-; 0000 01EE // Initialize temperature alert variables
-; 0000 01EF temp_alert_active = 0;
+; 0000 01EB 
+; 0000 01EC // Initialize temperature alert variables
+; 0000 01ED temp_alert_active = 0;
 	STS  _temp_alert_active,R30
-; 0000 01F0 temp_alert_start_time = 0;
+; 0000 01EE temp_alert_start_time = 0;
 	STS  _temp_alert_start_time,R30
 	STS  _temp_alert_start_time+1,R30
 	STS  _temp_alert_start_time+2,R30
 	STS  _temp_alert_start_time+3,R30
-; 0000 01F1 temp_alert_last_toggle = 0;
+; 0000 01EF temp_alert_last_toggle = 0;
 	STS  _temp_alert_last_toggle,R30
 	STS  _temp_alert_last_toggle+1,R30
 	STS  _temp_alert_last_toggle+2,R30
 	STS  _temp_alert_last_toggle+3,R30
-; 0000 01F2 temp_alert_buzzer_state = 0;
+; 0000 01F0 temp_alert_buzzer_state = 0;
 	STS  _temp_alert_buzzer_state,R30
-; 0000 01F3 
-; 0000 01F4 // Wait for timer to start
-; 0000 01F5 delay_ms(100);
+; 0000 01F1 
+; 0000 01F2 // Wait for timer to start
+; 0000 01F3 delay_ms(100);
 	LDI  R26,LOW(100)
 	LDI  R27,0
 	CALL _delay_ms
-; 0000 01F6 
-; 0000 01F7 ssd1306_clear();
+; 0000 01F4 
+; 0000 01F5 ssd1306_clear();
 	CALL SUBOPT_0x1B
-; 0000 01F8 ssd1306_set_cursor(0, 3);
+; 0000 01F6 ssd1306_set_cursor(0, 3);
 	LDI  R26,LOW(3)
 	LDI  R27,0
 	RCALL _ssd1306_set_cursor
-; 0000 01F9 ssd1306_print("System Ready!");
+; 0000 01F7 ssd1306_print("System Ready!");
 	__POINTW2MN _0xCA,34
 	CALL SUBOPT_0x1E
-; 0000 01FA 
-; 0000 01FB // Show timer status
-; 0000 01FC ssd1306_set_cursor(0, 5);
+; 0000 01F8 
+; 0000 01F9 // Show timer status
+; 0000 01FA ssd1306_set_cursor(0, 5);
 	CALL SUBOPT_0x1F
-; 0000 01FD if (millis() > 0) {
+; 0000 01FB if (millis() > 0) {
 	RCALL _millis
 	CALL __CPD01
 	BRSH _0xCE
-; 0000 01FE ssd1306_print("Timer: OK");
+; 0000 01FC ssd1306_print("Timer: OK");
 	__POINTW2MN _0xCA,48
 	RJMP _0xE4
-; 0000 01FF } else {
+; 0000 01FD } else {
 _0xCE:
-; 0000 0200 ssd1306_print("Timer: ERROR");
+; 0000 01FE ssd1306_print("Timer: ERROR");
 	__POINTW2MN _0xCA,58
 _0xE4:
 	RCALL _ssd1306_print
-; 0000 0201 }
-; 0000 0202 
-; 0000 0203 ssd1306_display();
+; 0000 01FF }
+; 0000 0200 
+; 0000 0201 ssd1306_display();
 	RCALL _ssd1306_display
-; 0000 0204 delay_ms(1000);
+; 0000 0202 delay_ms(1000);
 	LDI  R26,LOW(1000)
 	LDI  R27,HIGH(1000)
 	CALL _delay_ms
-; 0000 0205 }
+; 0000 0203 }
 _0x2060002:
 	LD   R16,Y+
 	LD   R17,Y+
@@ -3226,31 +3227,31 @@ _0x2060002:
 _0xCA:
 	.BYTE 0x47
 ;void main(void) {
-; 0000 0208 void main(void) {
+; 0000 0206 void main(void) {
 
 	.CSEG
 _main:
 ; .FSTART _main
-; 0000 0209 unsigned long current_time;
-; 0000 020A 
-; 0000 020B // System initialization
-; 0000 020C system_init();
+; 0000 0207 unsigned long current_time;
+; 0000 0208 
+; 0000 0209 // System initialization
+; 0000 020A system_init();
 	SBIW R28,4
 ;	current_time -> Y+0
 	RCALL _system_init
-; 0000 020D 
-; 0000 020E while (1) {
+; 0000 020B 
+; 0000 020C while (1) {
 _0xD0:
-; 0000 020F current_time = millis();
+; 0000 020D current_time = millis();
 	RCALL _millis
 	CALL SUBOPT_0x5
-; 0000 0210 
-; 0000 0211 // Debug timer function
-; 0000 0212 debug_timer();
+; 0000 020E 
+; 0000 020F // Debug timer function
+; 0000 0210 debug_timer();
 	RCALL _debug_timer
-; 0000 0213 
-; 0000 0214 // Read DHT11 every 2 seconds
-; 0000 0215 if (current_time - last_dht_read >= 2000) {
+; 0000 0211 
+; 0000 0212 // Read DHT11 every 2 seconds
+; 0000 0213 if (current_time - last_dht_read >= 2000) {
 	LDS  R26,_last_dht_read
 	LDS  R27,_last_dht_read+1
 	LDS  R24,_last_dht_read+2
@@ -3258,75 +3259,75 @@ _0xD0:
 	CALL SUBOPT_0x16
 	__CPD1N 0x7D0
 	BRLO _0xD3
-; 0000 0216 read_dht11();
+; 0000 0214 read_dht11();
 	RCALL _read_dht11
-; 0000 0217 last_dht_read = current_time;
+; 0000 0215 last_dht_read = current_time;
 	CALL SUBOPT_0x6
 	STS  _last_dht_read,R30
 	STS  _last_dht_read+1,R31
 	STS  _last_dht_read+2,R22
 	STS  _last_dht_read+3,R23
-; 0000 0218 }
-; 0000 0219 
-; 0000 021A // Check temperature alert - NEW
-; 0000 021B check_temperature_alert();
+; 0000 0216 }
+; 0000 0217 
+; 0000 0218 // Check temperature alert - NEW
+; 0000 0219 check_temperature_alert();
 _0xD3:
 	RCALL _check_temperature_alert
-; 0000 021C 
-; 0000 021D // Check obstacle sensor
-; 0000 021E hasObstacle = !(PINC & (1 << FC51_PIN));
+; 0000 021A 
+; 0000 021B // Check obstacle sensor
+; 0000 021C hasObstacle = !(PINC & (1 << FC51_PIN));
 	IN   R30,0x6
 	ANDI R30,LOW(0x2)
 	CALL __LNEGB1
 	STS  _hasObstacle,R30
-; 0000 021F 
-; 0000 0220 if (hasObstacle) {
+; 0000 021D 
+; 0000 021E if (hasObstacle) {
 	CPI  R30,0
 	BREQ _0xD4
-; 0000 0221 // Object detected - open gate
-; 0000 0222 if (past_obstacle != hasObstacle) {
+; 0000 021F // Object detected - open gate
+; 0000 0220 if (past_obstacle != hasObstacle) {
 	LDS  R26,_past_obstacle
 	CP   R30,R26
 	BREQ _0xD5
-; 0000 0223 open_gate();
+; 0000 0221 open_gate();
 	RCALL _open_gate
-; 0000 0224 // Only sound obstacle buzzer if not in temperature alert mode
-; 0000 0225 if (!temp_alert_active) {
+; 0000 0222 // Only sound obstacle buzzer if not in temperature alert mode
+; 0000 0223 if (!temp_alert_active) {
 	LDS  R30,_temp_alert_active
 	CPI  R30,0
 	BRNE _0xD6
-; 0000 0226 PORTD |= (1 << BUZZER_PIN);   // Buzzer on
+; 0000 0224 PORTD |= (1 << BUZZER_PIN);   // Buzzer on
 	SBI  0xB,2
-; 0000 0227 delay_ms(200);
+; 0000 0225 delay_ms(200);
 	CALL SUBOPT_0x22
-; 0000 0228 PORTD &= ~(1 << BUZZER_PIN);  // Buzzer off
+; 0000 0226 PORTD &= ~(1 << BUZZER_PIN);  // Buzzer off
 	CBI  0xB,2
-; 0000 0229 }
-; 0000 022A delay_ms(1000);
+; 0000 0227 }
+; 0000 0228 delay_ms(1000);
 _0xD6:
 	LDI  R26,LOW(1000)
 	LDI  R27,HIGH(1000)
 	CALL _delay_ms
-; 0000 022B }
-; 0000 022C } else {
+; 0000 0229 }
+; 0000 022A } else {
 _0xD5:
 	RJMP _0xD7
 _0xD4:
-; 0000 022D // No object - close gate
-; 0000 022E close_gate();
+; 0000 022B // No object - close gate
+; 0000 022C close_gate();
 	RCALL _close_gate
-; 0000 022F }
+; 0000 022D }
 _0xD7:
-; 0000 0230 past_obstacle = hasObstacle;
+; 0000 022E past_obstacle = hasObstacle;
 	LDS  R30,_hasObstacle
 	STS  _past_obstacle,R30
-; 0000 0231 
-; 0000 0232 // Process clap switch - CALL ONLY 1 FUNCTION
-; 0000 0233 handle_clap_switch();
+; 0000 022F 
+; 0000 0230 // Process clap switch - CALL ONLY 1 FUNCTION
+; 0000 0231 handle_clap_switch();
 	RCALL _handle_clap_switch
-; 0000 0234 
-; 0000 0235 // Update display every 500ms
-; 0000 0236 if (current_time - last_display_update >= 500) {
+; 0000 0232 
+; 0000 0233 // Update display every 500ms
+; 0000 0234 if (current_time - last_display_update >= 500) {
 	LDS  R26,_last_display_update
 	LDS  R27,_last_display_update+1
 	LDS  R24,_last_display_update+2
@@ -3334,21 +3335,20 @@ _0xD7:
 	CALL SUBOPT_0x16
 	__CPD1N 0x1F4
 	BRLO _0xD8
-; 0000 0237 update_display();
+; 0000 0235 update_display();
 	RCALL _update_display
-; 0000 0238 last_display_update = current_time;
+; 0000 0236 last_display_update = current_time;
 	CALL SUBOPT_0x6
 	STS  _last_display_update,R30
 	STS  _last_display_update+1,R31
 	STS  _last_display_update+2,R22
 	STS  _last_display_update+3,R23
+; 0000 0237 }
+; 0000 0238 
 ; 0000 0239 }
-; 0000 023A 
-; 0000 023B // No delay needed - main loop runs freely
-; 0000 023C }
 _0xD8:
 	RJMP _0xD0
-; 0000 023D }
+; 0000 023A }
 _0xD9:
 	RJMP _0xD9
 ; .FEND

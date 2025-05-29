@@ -78,7 +78,7 @@ interrupt [TIM0_COMPA] void timer0_compa_isr(void) {
     timer_overflow_count++;
     
     // Reset overflow counter every second for debug
-    if (timer_overflow_count >= 250) {  // 250 * 4ms = 1000ms
+    if (timer_overflow_count >= 1000) {  // 250 * 4ms = 1000ms
         timer_overflow_count = 0;
     }
 }
@@ -566,6 +566,5 @@ void main(void) {
             last_display_update = current_time;
         }
         
-        // No delay needed - main loop runs freely
     }
 }
